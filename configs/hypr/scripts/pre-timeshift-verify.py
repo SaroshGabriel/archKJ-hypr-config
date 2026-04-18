@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
+# ============================================================
+#  pre-timeshift-verify.py — archkj System Health Check
+#  Author: KJ / SaroshGabriel
+#  Updated: 2026-04-18 (post full system audit)
+# ============================================================
 import subprocess
 import os
 import datetime
 
+# ── Config ───────────────────────────────────────────────────
+HOME = "/home/KJ"
+REPORT_DIR = f"{HOME}/Logs/preTimeshift"
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-report_dir = "/home/KJ/Logs/preTimeshift"
-os.makedirs(report_dir, exist_ok=True)  # FIX: create dir if missing
-report_path = f"{report_dir}/preTimeshiftReport_{timestamp}.log"
+report_path = f"{REPORT_DIR}/preTimeshiftReport_{timestamp}.log"
+os.makedirs(REPORT_DIR, exist_ok=True)
 
+# ── Helpers ──────────────────────────────────────────────────
 def run(cmd):
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=10)
-        return result.stdout.strip() or result.stderr.strip() or "OK"
+        r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=10)
+        return r.stdout.strip() or r.stderr.strip() or "OK"
     except:
         return "TIMEOUT/ERROR"
 
@@ -21,104 +29,190 @@ def check_file(path):
 def check_dir(path):
     return "✅ EXISTS" if os.path.isdir(path) else "❌ MISSING"
 
-report = []
-report.append("=" * 60)
-report.append("PRE-TIMESHIFT VERIFICATION REPORT")
-report.append(f"Generated: {datetime.datetime.now()}")
-report.append("=" * 60)
+def svc_active(name):
+    return "✅ active" if run(f"systemctl is-active {name}") == "active" else "❌ inactive"
 
-report.append("\n[ SYSTEM ]")
-report.append(f"Hostname:        {run('hostname')}")
-report.append(f"Kernel:          {run('uname -r')}")
-report.append(f"Uptime:          {run('uptime -p')}")
-report.append(f"Disk Usage:      {run('df -h / | tail -1')}")
-report.append(f"RAM Usage:       {run('free -h | grep Mem')}")
-report.append(f"Failed Services: {run('systemctl --failed --no-legend | wc -l')} failed")
+def svc_enabled(name):
+    return "✅ enabled" if run(f"systemctl is-enabled {name}") == "enabled" else "❌ disabled"
 
-report.append("\n[ HYPRLAND ]")
-report.append(f"hyprland.conf:   {check_file('/home/KJ/.config/hypr/hyprland.conf')}")
-report.append(f"hypridle.conf:   {check_file('/home/KJ/.config/hypr/hypridle.conf')}")
-report.append(f"hyprlock.conf:   {check_file('/home/KJ/.config/hyprlock/hyprlock.conf')}")
-report.append(f"wallpaper.sh:    {check_file('/home/KJ/.config/hypr/wallpaper.sh')}")
-report.append(f"Monitors:        {run('hyprctl monitors | grep Monitor')}")
+def pkg(name):
+    result = run(f"pacman -Q {name} 2>/dev/null")
+    return f"✅ {result}" if result and "error" not in result.lower() else "❌ NOT INSTALLED"
 
-report.append("\n[ WAYBAR ]")
-report.append(f"config.jsonc:    {check_file('/home/KJ/.config/waybar/config.jsonc')}")
-report.append(f"style.css:       {check_file('/home/KJ/.config/waybar/style.css')}")
-report.append(f"netspeed.sh:     {check_file('/home/KJ/.config/waybar/netspeed.sh')}")
-report.append(f"Waybar running:  {'✅ YES' if run('pgrep waybar') else '❌ NO'}")
+# ── Report ───────────────────────────────────────────────────
+r = []
 
-report.append("\n[ KITTY ]")
-report.append(f"kitty.conf:      {check_file('/home/KJ/.config/kitty/kitty.conf')}")
+r.append("=" * 60)
+r.append("PRE-TIMESHIFT VERIFICATION REPORT")
+r.append(f"Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+r.append("=" * 60)
 
-report.append("\n[ ROFI ]")
-report.append(f"config.rasi:     {check_file('/home/KJ/.config/rofi/config.rasi')}")
-report.append(f"cyberpunk.rasi:  {check_file('/home/KJ/.config/rofi/cyberpunk.rasi')}")
-report.append(f"powermenu.sh:    {check_file('/home/KJ/.config/rofi/powermenu.sh')}")
+# ── System ───────────────────────────────────────────────────
+r.append("\n[ SYSTEM ]")
+r.append(f"Hostname:           {run('hostname')}")
+r.append(f"Kernel:             {run('uname -r')}")
+r.append(f"Uptime:             {run('uptime -p')}")
+temp_raw = run("cat /sys/class/thermal/thermal_zone0/temp")
+temp_c = str(round(int(temp_raw) / 1000, 1)) if temp_raw.isdigit() else "N/A"
+r.append(f"CPU Temp:           {temp_c}°C")
+r.append(f"CPU Governor:       {run('cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor')}")
+r.append(f"Disk / (SSD):       {run('df -h / | tail -1')}")
+r.append(f"Disk HDD1:          {run('df -h /mnt/HDD1 | tail -1')}")
+r.append(f"Disk HDD2:          {run('df -h /mnt/HDD2 | tail -1')}")
+r.append(f"RAM:                {run('free -h | grep Mem')}")
+r.append(f"Failed Services:    {run('systemctl --failed --no-legend | wc -l')} failed")
+r.append(f"Orphan packages:    {run('pacman -Qdt 2>/dev/null | wc -l')} orphans")
 
-report.append("\n[ SDDM ]")
-report.append(f"SDDM enabled:    {run('systemctl is-enabled sddm')}")
-report.append(f"Theme config:    {check_file('/etc/sddm.conf.d/theme.conf')}")
-report.append(f"Random bg svc:   {run('systemctl is-enabled sddm-random-bg')}")
+# ── Security ─────────────────────────────────────────────────
+r.append("\n[ SECURITY ]")
+r.append(f"Nouveau blacklist:  {check_file('/etc/modprobe.d/blacklist-nouveau.conf')}")
+r.append(f"SSH PermitRootLogin:{run('grep PermitRootLogin /etc/ssh/sshd_config | head -1')}")
+r.append(f"Samba guest access: {run('grep \"guest ok\" /etc/samba/smb.conf | head -1')}")
+r.append(f"SSH daemon:         {svc_active('sshd')}")
+r.append(f"Samba daemon:       {svc_active('smb')}")
+r.append(f"ProtonVPN:          {svc_active('proton.VPN')}")
+r.append(f"Tailscale:          {svc_active('tailscaled')}")
 
-report.append("\n[ SERVICES ]")
-report.append(f"NetworkManager:  {run('systemctl is-active NetworkManager')}")
-report.append(f"Bluetooth:       {run('systemctl is-active bluetooth')}")
-report.append(f"Cronie:          {run('systemctl is-active cronie')}")
-report.append(f"Timeshift cron:  {run('sudo crontab -l 2>/dev/null | grep timeshift')}")
+# ── Hyprland ─────────────────────────────────────────────────
+r.append("\n[ HYPRLAND ]")
+r.append(f"hyprland.conf:      {check_file(f'{HOME}/.config/hypr/hyprland.conf')}")
+r.append(f"hypridle.conf:      {check_file(f'{HOME}/.config/hypr/hypridle.conf')}")
+r.append(f"hyprlock.conf:      {check_file(f'{HOME}/.config/hyprlock/hyprlock.conf')}")
+r.append(f"wallpaper.sh:       {check_file(f'{HOME}/.config/hypr/wallpaper.sh')}")
+r.append(f"fix-brave.sh:       {check_file(f'{HOME}/.config/hypr/fix-brave.sh')}")
+r.append(f"launch-nifty.sh:    {check_file(f'{HOME}/.config/hypr/scripts/launch-nifty.sh')}")
+r.append(f"pre-timeshift.py:   {check_file(f'{HOME}/.config/hypr/scripts/pre-timeshift-verify.py')}")
+r.append(f"WLR_DRM_DEVICES:    {run('grep WLR_DRM_DEVICES /home/KJ/.config/hypr/hyprland.conf')}")
+r.append(f"Monitors:           {run('hyprctl monitors | grep Monitor')}")
+r.append(f"awww-daemon:        {'✅ YES' if run('pgrep awww-daemon') else '❌ NOT RUNNING'}")
 
-report.append("\n[ DFT SETUP ]")
-report.append(f"DFT folder:           {check_dir('/home/KJ/Projects/dft')}")
-report.append(f"Python venv:          {check_dir('/home/KJ/Projects/dft/dft-env')}")
-report.append(f"dft-fundamentals:     {check_dir('/home/KJ/Projects/dft/dft-fundamentals')}")
-report.append(f"bsr-cell:             {check_dir('/home/KJ/Projects/dft/bsr-cell')}")
-report.append(f"atpg-python-tool:     {check_dir('/home/KJ/Projects/dft/atpg-python-tool')}")
-report.append(f"dft-readiness-checker:{check_dir('/home/KJ/Projects/dft/dft-readiness-checker')}")
-report.append(f"openroad-dft-flow:    {check_dir('/home/KJ/Projects/dft/openroad-dft-flow')}")
+# ── Waybar ───────────────────────────────────────────────────
+r.append("\n[ WAYBAR ]")
+r.append(f"config.jsonc:       {check_file(f'{HOME}/.config/waybar/config.jsonc')}")
+r.append(f"style.css:          {check_file(f'{HOME}/.config/waybar/style.css')}")
+r.append(f"netspeed.sh:        {check_file(f'{HOME}/.config/waybar/netspeed.sh')}")
+r.append(f"clock.sh:           {check_file(f'{HOME}/.config/waybar/clock.sh')}")
+r.append(f"battery.sh:         {check_file(f'{HOME}/.config/waybar/battery.sh')}")
+r.append(f"Waybar running:     {'✅ YES' if run('pgrep waybar') else '❌ NOT RUNNING'}")
 
-report.append("\n[ LINUX SCRIPTS ]")
-report.append(f"LinuxScripts/:        {check_dir('/home/KJ/LinuxScripts')}")
-report.append(f"niftyMonitor/:        {check_dir('/home/KJ/LinuxScripts/niftyMonitor')}")
-report.append(f"stock_monitor.py:     {check_file('/home/KJ/LinuxScripts/niftyMonitor/stock_monitor.py')}")
-report.append(f"news_sentiment.py:    {check_file('/home/KJ/LinuxScripts/niftyMonitor/news_sentiment.py')}")
-report.append(f"niftyMonitor venv:    {check_dir('/home/KJ/LinuxScripts/niftyMonitor/.venv')}")
-report.append(f"aliasSyncWithBashrc:  {check_dir('/home/KJ/LinuxScripts/aliasSyncWithBashrc')}")
-report.append(f"hyprlandConfig:       {check_dir('/home/KJ/LinuxScripts/hyprlandConfig')}")
-report.append(f"waybarConfig:         {check_dir('/home/KJ/LinuxScripts/waybarConfig')}")
+# ── Kitty ────────────────────────────────────────────────────
+r.append("\n[ KITTY ]")
+r.append(f"kitty.conf:         {check_file(f'{HOME}/.config/kitty/kitty.conf')}")
+r.append(f"cursor_blink:       {run('grep cursor_blink_interval /home/KJ/.config/kitty/kitty.conf')}")
+r.append(f"repaint_delay:      {run('grep repaint_delay /home/KJ/.config/kitty/kitty.conf')}")
 
-report.append("\n[ STOCK MONITOR ]")
-report.append(f"API key file:         {check_file('/home/KJ/.config/stock_monitor/api_key')}")
-report.append(f"run.sh:               {check_file('/home/KJ/LinuxScripts/niftyMonitor/run.sh')}")
+# ── Rofi ─────────────────────────────────────────────────────
+r.append("\n[ ROFI ]")
+r.append(f"config.rasi:        {check_file(f'{HOME}/.config/rofi/config.rasi')}")
+r.append(f"cyberpunk.rasi:     {check_file(f'{HOME}/.config/rofi/cyberpunk.rasi')}")
+r.append(f"powermenu.sh:       {check_file(f'{HOME}/.config/rofi/powermenu.sh')}")
+r.append(f"Modes:              {run('grep modes /home/KJ/.config/rofi/config.rasi')}")
 
-report.append("\n[ GIT ]")
-report.append(f"Git user:        {run('git config --global user.name')}")
-report.append(f"Git email:       {run('git config --global user.email')}")
-report.append(f"SSH key:         {check_file('/home/KJ/.ssh/id_ed25519')}")
-report.append(f"GitHub connect:  {run('ssh -T git@github.com 2>&1')}")
+# ── Dunst ────────────────────────────────────────────────────
+r.append("\n[ DUNST ]")
+r.append(f"dunstrc:            {check_file(f'{HOME}/.config/dunst/dunstrc')}")
+r.append(f"Dunst running:      {'✅ YES' if run('pgrep dunst') else '❌ NOT RUNNING'}")
 
-report.append("\n[ INSTALLED APPS ]")
+# ── XDG Portal ───────────────────────────────────────────────
+r.append("\n[ XDG PORTAL ]")
+r.append(f"portal config:      {check_file(f'{HOME}/.config/xdg-desktop-portal/hyprland-portals.conf')}")
+
+# ── Brave ────────────────────────────────────────────────────
+r.append("\n[ BRAVE ]")
+r.append(f"brave-flags.conf:   {check_file(f'{HOME}/.config/brave-flags.conf')}")
+r.append(f"HW accel disabled:  {run('grep disable-gpu /home/KJ/.config/brave-flags.conf | head -1')}")
+
+# ── SDDM ─────────────────────────────────────────────────────
+r.append("\n[ SDDM ]")
+r.append(f"SDDM:               {svc_enabled('sddm')}")
+r.append(f"Theme config:       {check_file('/etc/sddm.conf.d/theme.conf')}")
+
+# ── Services ─────────────────────────────────────────────────
+r.append("\n[ SERVICES ]")
+r.append(f"NetworkManager:     {svc_active('NetworkManager')}")
+nm_wait = svc_enabled('NetworkManager-wait-online')
+nm_status = "✅ correctly disabled" if "disabled" in nm_wait else "⚠️ should be disabled"
+r.append(f"NM-wait-online:     {nm_status}")
+r.append(f"Bluetooth:          {svc_active('bluetooth')}")
+r.append(f"Cronie:             {svc_active('cronie')}")
+r.append(f"cpupower:           {svc_enabled('cpupower')}")
+r.append(f"Timeshift cron:     {run('sudo crontab -l 2>/dev/null | grep timeshift')}")
+
+# ── Storage ──────────────────────────────────────────────────
+r.append("\n[ STORAGE ]")
+r.append(f"SSD (sda):          {run('lsblk /dev/sda -o NAME,SIZE,MOUNTPOINT | grep -v loop')}")
+r.append(f"HDD (sdb):          {run('lsblk /dev/sdb -o NAME,SIZE,MOUNTPOINT | grep -v loop')}")
+r.append(f"HDD1 mounted:       {'✅ YES' if run('mountpoint -q /mnt/HDD1 && echo yes') == 'yes' else '❌ NOT MOUNTED'}")
+r.append(f"HDD2 mounted:       {'✅ YES' if run('mountpoint -q /mnt/HDD2 && echo yes') == 'yes' else '❌ NOT MOUNTED'}")
+r.append(f"Torrents dir:       {check_dir(f'{HOME}/Downloads/Torrents')}")
+r.append(f"HDD2 Torrents:      {check_dir('/mnt/HDD2/Torrents')}")
+
+# ── DFT Setup ────────────────────────────────────────────────
+r.append("\n[ DFT SETUP ]")
+r.append(f"DFT folder:         {check_dir(f'{HOME}/Projects/dft')}")
+r.append(f"Python venv:        {check_dir(f'{HOME}/Projects/dft/dft-env')}")
+r.append(f"dft-fundamentals:   {check_dir(f'{HOME}/Projects/dft/dft-fundamentals')}")
+r.append(f"bsr-cell:           {check_dir(f'{HOME}/Projects/dft/bsr-cell')}")
+r.append(f"atpg-python-tool:   {check_dir(f'{HOME}/Projects/dft/atpg-python-tool')}")
+r.append(f"dft-readiness:      {check_dir(f'{HOME}/Projects/dft/dft-readiness-checker')}")
+r.append(f"openroad-dft-flow:  {check_dir(f'{HOME}/Projects/dft/openroad-dft-flow')}")
+r.append(f"DFT Roadmap:        {check_file(f'{HOME}/Projects/dft/DFT_Roadmap.md')}")
+
+# ── LinuxScripts ─────────────────────────────────────────────
+r.append("\n[ LINUX SCRIPTS ]")
+r.append(f"LinuxScripts/:      {check_dir(f'{HOME}/LinuxScripts')}")
+r.append(f"niftyMonitor/:      {check_dir(f'{HOME}/LinuxScripts/niftyMonitor')}")
+r.append(f"stock_monitor.py:   {check_file(f'{HOME}/LinuxScripts/niftyMonitor/stock_monitor.py')}")
+r.append(f"niftyMonitor venv:  {check_dir(f'{HOME}/LinuxScripts/niftyMonitor/.venv')}")
+r.append(f"aliasSyncWithBashrc:{check_dir(f'{HOME}/LinuxScripts/aliasSyncWithBashrc')}")
+r.append(f"waybarConfig:       {check_dir(f'{HOME}/LinuxScripts/waybarConfig')}")
+r.append(f"setupWorkspace.sh:  {check_file(f'{HOME}/LinuxScripts/setupWorkspace.sh')}")
+r.append(f"Nifty data dir:     {check_dir(f'{HOME}/Data/niftyMonitor')}")
+
+# ── Git ──────────────────────────────────────────────────────
+r.append("\n[ GIT ]")
+r.append(f"Git user:           {run('git config --global user.name')}")
+r.append(f"Git email:          {run('git config --global user.email')}")
+r.append(f"SSH key:            {check_file(f'{HOME}/.ssh/id_ed25519')}")
+r.append(f"GitHub connect:     {run('ssh -T git@github.com 2>&1')}")
+r.append(f"dotfiles repo:      {check_dir(f'{HOME}/archkj-dotfiles/.git')}")
+r.append(f"LinuxScripts repo:  {check_dir(f'{HOME}/LinuxScripts/.git')}")
+
+# ── Installed Apps ───────────────────────────────────────────
+r.append("\n[ INSTALLED APPS ]")
 apps = [
-    'hyprland', 'waybar', 'kitty', 'brave-bin', 'firefox',
-    'spotify', 'telegram-desktop', 'vlc', 'deluge',
-    'timeshift', 'btop', 'htop', 'code', 'thunar',
-    'libreoffice-fresh', 'whatsapp-for-linux', 'rofi',
+    'hyprland', 'waybar', 'kitty', 'rofi', 'dunst',
+    'brave-bin', 'firefox', 'spotify', 'telegram-desktop',
+    'vlc', 'vlc-plugin-ffmpeg', 'deluge', 'timeshift',
+    'btop', 'htop', 'code', 'thunar', 'libreoffice-fresh',
+    'whatsapp-for-linux', 'cpupower', 'tailscale',
+    'udiskie', 'brightnessctl', 'playerctl', 'hyprshot',
 ]
 for app in apps:
-    result = run(f'pacman -Q {app} 2>/dev/null')
-    status = f"✅ {result}" if result and 'error' not in result.lower() else "❌ NOT INSTALLED"
-    report.append(f"  {app:30s} {status}")
+    result = run(f"pacman -Q {app} 2>/dev/null")
+    status = f"✅ {result}" if result and "error" not in result.lower() else "❌ NOT INSTALLED"
+    r.append(f"  {app:30s} {status}")
 
-report.append("\n[ WALLPAPERS ]")
-report.append(f"Total wallpapers: {run('find /home/KJ/Pictures/Wallpapers -type f 2>/dev/null | wc -l')}")
-report.append(f"swww running:     {'✅ YES' if run('pgrep swww') else '❌ NO'}")  # FIX: was 'awww'
+# ── Wallpapers ───────────────────────────────────────────────
+r.append("\n[ WALLPAPERS ]")
+r.append(f"Total wallpapers:   {run('find /home/KJ/Pictures/Wallpapers -type f 2>/dev/null | wc -l')}")
+r.append(f"awww-daemon:        {'✅ RUNNING' if run('pgrep awww-daemon') else '❌ NOT RUNNING'}")
 
-report.append("\n" + "=" * 60)
-report.append("END OF REPORT")
-report.append("=" * 60)
+# ── Logs ─────────────────────────────────────────────────────
+r.append("\n[ LOGS ]")
+r.append(f"preTimeshift logs:  {run('ls /home/KJ/Logs/preTimeshift/ | wc -l')} files")
+r.append(f"nifty CSV files:    {run('ls /home/KJ/Data/niftyMonitor/*.csv 2>/dev/null | wc -l')} files")
 
-output = '\n'.join(report)
+r.append("\n" + "=" * 60)
+r.append("END OF REPORT")
+r.append("=" * 60)
+
+# ── Output ───────────────────────────────────────────────────
+output = '\n'.join(r)
 with open(report_path, 'w') as f:
     f.write(output)
 
+print(f"Running pre-Timeshift verification...")
 print(f"Report saved to: {report_path}")
 print(output)
+print()
