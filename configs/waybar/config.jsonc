@@ -4,9 +4,9 @@
     "height": 35,
     "spacing": 4,
 
-    "modules-left": ["hyprland/workspaces", "custom/spotify", "custom/terminal", "custom/launcher", "custom/screenshot", "custom/sysmon"],
+    "modules-left": ["hyprland/workspaces", "custom/terminal", "custom/screenshot", "custom/brave", "custom/thunar", "custom/gcal", "custom/spotify"],
     "modules-center": ["custom/clock"],
-    "modules-right": ["custom/power", "pulseaudio", "network", "custom/netspeed", "bluetooth", "cpu", "memory", "temperature", "custom/battery", "tray"],
+    "modules-right": ["custom/power", "pulseaudio", "network", "custom/netdown", "custom/netup", "bluetooth", "cpu", "memory", "temperature", "custom/battery", "tray"],
 
     "hyprland/workspaces": {
         "format": "{icon}",
@@ -81,10 +81,11 @@
     },
 
     "custom/spotify": {
-        "exec": "playerctl metadata --format '󰎈 {{artist}} - {{title}}' 2>/dev/null || echo ''",
+        "exec": "playerctl metadata --format '󰎈 {{artist}} - {{title}}' 2>/dev/null || echo '󰎈 Spotify'",
         "interval": 3,
         "format": "{}",
         "on-click": "playerctl play-pause",
+        "on-click-right": "spotify",
         "on-scroll-up": "playerctl next",
         "on-scroll-down": "playerctl previous",
         "max-length": 40
@@ -103,8 +104,15 @@
         "tooltip": false
     },
 
-    "custom/netspeed": {
-        "exec": "/home/KJ/.config/waybar/netspeed.sh",
+    "custom/netdown": {
+        "exec": "/home/KJ/.config/waybar/netdown.sh",
+        "interval": 2,
+        "format": "{}",
+        "tooltip": false
+    },
+
+    "custom/netup": {
+        "exec": "/home/KJ/.config/waybar/netup.sh",
         "interval": 2,
         "format": "{}",
         "tooltip": false
@@ -133,21 +141,27 @@
         "tooltip": false
     },
 
-    "custom/launcher": {
-        "format": "🚀",
-        "on-click": "rofi -show drun",
-        "tooltip": false
-    },
-
     "custom/screenshot": {
         "format": "📸",
         "on-click": "hyprshot -m region --clipboard-only",
         "tooltip": false
     },
 
-    "custom/sysmon": {
-        "format": "📊",
-        "on-click": "kitty -e btop",
+    "custom/brave": {
+        "format": "󰖟",
+        "on-click": "brave",
+        "tooltip": false
+    },
+
+    "custom/thunar": {
+        "format": "📁",
+        "on-click": "thunar",
+        "tooltip": false
+    },
+
+    "custom/gcal": {
+        "format": "📅",
+        "on-click": "brave --new-window https://calendar.google.com",
         "tooltip": false
     },
 
