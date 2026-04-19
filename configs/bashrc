@@ -129,3 +129,4 @@ alias nifty='cd ~/LinuxScripts/niftyMonitor && source .venv/bin/activate && pyth
 
 # Show Hyprland keybinds
 alias shortcuts='grep "^bind" ~/.config/hypr/hyprland.conf'
+alias tsc='ts "archkj snapshot $(date +%Y-%m-%d)"'

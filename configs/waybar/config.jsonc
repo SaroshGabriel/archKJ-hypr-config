@@ -6,7 +6,7 @@
 
     "modules-left": ["hyprland/workspaces", "custom/terminal", "custom/screenshot", "custom/brave", "custom/thunar", "custom/gcal", "custom/spotify"],
     "modules-center": ["custom/clock"],
-    "modules-right": ["custom/power", "pulseaudio", "network", "custom/netdown", "custom/netup", "bluetooth", "cpu", "memory", "temperature", "custom/battery", "tray"],
+    "modules-right": ["custom/netdown", "custom/netup", "cpu", "memory", "network", "bluetooth", "pulseaudio", "custom/power", "temperature", "tray", "custom/battery"],
 
     "hyprland/workspaces": {
         "format": "{icon}",
