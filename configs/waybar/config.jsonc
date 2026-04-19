@@ -4,7 +4,7 @@
     "height": 35,
     "spacing": 4,
 
-    "modules-left": ["hyprland/workspaces", "custom/terminal", "custom/screenshot", "custom/brave", "custom/thunar", "custom/gcal", "custom/spotify"],
+    "modules-left": ["hyprland/workspaces", "custom/terminal", "custom/screenshot", "custom/brave", "custom/thunar", "custom/gcal"],
     "modules-center": ["custom/clock"],
     "modules-right": ["custom/netdown", "custom/netup", "cpu", "memory", "network", "bluetooth", "pulseaudio", "custom/power", "temperature", "tray", "custom/battery"],
 
@@ -36,7 +36,7 @@
     },
 
     "cpu": {
-        "format": "󰻠 {usage}%",
+        "format": "󰻠 {usage:3}%",
         "tooltip": false,
         "interval": 2
     },
@@ -47,7 +47,7 @@
     },
 
     "temperature": {
-        "hwmon-path": "/sys/class/hwmon/hwmon6/temp1_input",
+        "hwmon-path": "/sys/class/hwmon/hwmon5/temp1_input",
         "critical-threshold": 80,
         "format": "󰔏 {temperatureC}°C",
         "format-critical": "󰔏 {temperatureC}°C"
@@ -78,17 +78,6 @@
             "default": ["󰕿", "󰖀", "󰕾"]
         },
         "on-click": "pavucontrol"
-    },
-
-    "custom/spotify": {
-        "exec": "playerctl metadata --format '󰎈 {{artist}} - {{title}}' 2>/dev/null || echo '󰎈 Spotify'",
-        "interval": 3,
-        "format": "{}",
-        "on-click": "playerctl play-pause",
-        "on-click-right": "spotify",
-        "on-scroll-up": "playerctl next",
-        "on-scroll-down": "playerctl previous",
-        "max-length": 40
     },
 
     "custom/power": {

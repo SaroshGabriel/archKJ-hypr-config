@@ -182,7 +182,7 @@ r.append(f"LinuxScripts repo:  {check_dir(f'{HOME}/LinuxScripts/.git')}")
 r.append("\n[ INSTALLED APPS ]")
 apps = [
     'hyprland', 'waybar', 'kitty', 'rofi', 'dunst',
-    'brave-bin', 'firefox', 'spotify', 'telegram-desktop',
+    'brave-bin', 'firefox', 'telegram-desktop',
     'vlc', 'vlc-plugin-ffmpeg', 'deluge', 'timeshift',
     'btop', 'htop', 'code', 'thunar', 'libreoffice-fresh',
     'whatsapp-for-linux', 'cpupower', 'tailscale',

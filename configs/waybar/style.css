@@ -41,7 +41,6 @@ window#waybar {
 
 /* ── All individual module pills ── */
 #custom-power,
-#custom-spotify,
 #custom-terminal,
 #custom-screenshot,
 #custom-brave,
@@ -103,13 +102,6 @@ window#waybar {
     border-color: rgba(239, 57, 70, 0.6);
 }
 
-/* ── Spotify ── */
-#custom-spotify {
-    color: #1db954;
-    font-style: italic;
-    font-size: 12px;
-}
-
 /* ── Network speeds ── */
 #custom-netdown { color: #50fa7b; }
 #custom-netup { color: #6b9fff; }
@@ -117,6 +109,8 @@ window#waybar {
 /* ── System stats ── */
 #cpu { color: #ff6b6b; }
 #memory { color: #EF3946; }
+
+/* ── Temperature ── */
 #temperature { color: #ffaa00; }
 #temperature.critical {
     color: #ff0000;
@@ -151,8 +145,7 @@ window#waybar {
 #temperature:hover,
 #network:hover,
 #pulseaudio:hover,
-#bluetooth:hover,
-#custom-spotify:hover {
+#bluetooth:hover {
     background: rgba(239, 57, 70, 0.12);
     border-color: rgba(239, 57, 70, 0.6);
 }

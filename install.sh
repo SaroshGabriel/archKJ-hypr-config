@@ -103,7 +103,6 @@ section "AUR Packages (yay)"
 
 AUR_PACKAGES=(
     brave-bin
-    spotify
     visual-studio-code-bin
     whatsapp-for-linux-git
     networkmanager-dmenu-git

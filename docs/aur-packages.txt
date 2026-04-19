@@ -1,7 +1,6 @@
 arc-kde-git
 brave-bin
 networkmanager-dmenu-git
-spotify
 visual-studio-code-bin
 webkit2gtk
 whatsapp-for-linux-git
