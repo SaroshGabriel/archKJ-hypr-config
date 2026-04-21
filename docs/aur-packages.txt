@@ -1,4 +1,3 @@
-arc-kde-git
 brave-bin
 networkmanager-dmenu-git
 visual-studio-code-bin
