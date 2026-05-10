@@ -43,10 +43,18 @@ fi
 ok "Running as $(whoami)"
 ok "Dotfiles repo: $DOTFILES_DIR"
 
+cd "$DOTFILES_DIR"
+
+# ── Git init if needed ───────────────────────────────────────
+if [ ! -d "$DOTFILES_DIR/.git" ]; then
+    log "Initializing git repo..."
+    git init
+    git branch -M main
+    ok "Git initialized"
+fi
+
 # ── Check git remote ─────────────────────────────────────────
 section "Git Remote Check"
-
-cd "$DOTFILES_DIR"
 
 if ! git remote get-url origin &>/dev/null; then
     warn "No git remote set. Setting up..."
@@ -56,14 +64,6 @@ if ! git remote get-url origin &>/dev/null; then
     ok "Remote set to $REMOTE_URL"
 else
     ok "Remote: $(git remote get-url origin)"
-fi
-
-# ── Git init if needed ───────────────────────────────────────
-if [ ! -d "$DOTFILES_DIR/.git" ]; then
-    log "Initializing git repo..."
-    git init
-    git branch -M main
-    ok "Git initialized"
 fi
 
 # ── Create folder structure ──────────────────────────────────
@@ -148,7 +148,7 @@ section "Sanitizing Sensitive Data"
 
 SENSITIVE_PATTERNS=("token" "password" "secret" "api_key" "PAT" "passwd" "credential")
 
-SCAN_DIRS=("$DOTFILES_DIR/configs")
+SCAN_DIRS=("$DOTFILES_DIR/configs" "$DOTFILES_DIR/scripts")
 FOUND_ISSUES=0
 
 for dir in "${SCAN_DIRS[@]}"; do

@@ -39,26 +39,26 @@ window#waybar {
     color: #ff6b6b;
 }
 
-/* ── All individual module pills ── */
-#custom-power,
+/* ── Universal pill — every module gets this ── */
 #custom-terminal,
 #custom-screenshot,
 #custom-brave,
+#custom-firefox,
 #custom-thunar,
-#custom-gcal,
+#custom-deluge,
+#custom-clipboard,
 #custom-netdown,
 #custom-netup,
 #custom-battery,
+#custom-power,
 #pulseaudio,
 #network,
 #cpu,
 #memory,
 #temperature,
-#battery,
 #bluetooth,
 #tray,
-#clock,
-#custom-clock {
+#clock {
     background: rgba(10, 10, 20, 0.88);
     border: 1px solid rgba(239, 57, 70, 0.35);
     border-radius: 12px;
@@ -68,7 +68,7 @@ window#waybar {
 }
 
 /* ── Clock ── */
-#clock, #custom-clock {
+#clock {
     color: #EF3946;
     font-weight: bold;
     font-size: 13px;
@@ -89,26 +89,44 @@ window#waybar {
 #custom-terminal,
 #custom-screenshot,
 #custom-brave,
+#custom-firefox,
 #custom-thunar,
-#custom-gcal {
+#custom-deluge,
+#custom-clipboard {
     font-size: 15px;
 }
+
 #custom-terminal:hover,
 #custom-screenshot:hover,
 #custom-brave:hover,
+#custom-firefox:hover,
 #custom-thunar:hover,
-#custom-gcal:hover {
+#custom-deluge:hover,
+#custom-clipboard:hover {
     background: rgba(239, 57, 70, 0.2);
     border-color: rgba(239, 57, 70, 0.6);
 }
 
-/* ── Network speeds ── */
-#custom-netdown { color: #50fa7b; }
-#custom-netup { color: #6b9fff; }
+/* ── Individual left icon colours ── */
+#custom-firefox   { color: #ff9055; }
+#custom-deluge    { color: #50fa7b; }
+#custom-clipboard { color: #bd93f9; }
+
+/* ── Network speed — fixed width stops the pill resizing ── */
+#custom-netdown {
+    color: #50fa7b;
+    min-width: 85px;
+    padding: 0 6px;
+}
+#custom-netup {
+    color: #f1fa8c;
+    min-width: 85px;
+    padding: 0 6px;
+}
 
 /* ── System stats ── */
-#cpu { color: #ff6b6b; }
-#memory { color: #EF3946; }
+#cpu        { color: #ff6b6b; }
+#memory     { color: #EF3946; }
 
 /* ── Temperature ── */
 #temperature { color: #ffaa00; }
@@ -120,9 +138,7 @@ window#waybar {
 }
 
 /* ── Battery ── */
-#battery, #custom-battery { color: #EF3946; }
-#battery.warning { color: #ffaa00; }
-#battery.critical { color: #ff0000; animation: blink 1s infinite; }
+#custom-battery { color: #EF3946; }
 
 /* ── Network ── */
 #network { color: #ff6b6b; }
@@ -133,13 +149,12 @@ window#waybar {
 
 /* ── Bluetooth ── */
 #bluetooth { color: #6b9fff; }
-#bluetooth.connected { color: #6b9fff; }
 #bluetooth.off { color: #444466; }
 
 /* ── Tray ── */
 #tray { padding: 0 8px; }
 
-/* ── Hover for stats ── */
+/* ── Hover for right-side stats ── */
 #cpu:hover,
 #memory:hover,
 #temperature:hover,

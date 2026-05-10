@@ -36,7 +36,9 @@ hyprland
 hyprshot
 imv
 inetutils
+iperf3
 iverilog
+iw
 kactivitymanagerd
 kde-gtk-config
 kdecoration
@@ -67,7 +69,9 @@ network-manager-applet
 networkmanager
 networkmanager-dmenu-git
 nmap
+nodejs
 noto-fonts-emoji
+npm
 ntfs-3g
 ocean-sound-theme
 oxygen
@@ -88,6 +92,7 @@ s-tui
 samba
 sddm
 sddm-kcm
+smartmontools
 spectacle
 sudo
 tailscale
@@ -109,6 +114,7 @@ vlc-plugin-ffmpeg
 waybar
 wget
 whatsapp-for-linux-git
+wireless_tools
 xdg-desktop-portal-hyprland
 xdg-user-dirs
 xorg-xrandr

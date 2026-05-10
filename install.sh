@@ -16,23 +16,25 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 MAGENTA='\033[1;35m'
 CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
 NC='\033[0m'
 
 log()     { echo -e "${MAGENTA}[archkj]${NC} $1"; }
 ok()      { echo -e "${GREEN}[✓]${NC} $1"; }
-warn()    { echo -e "${RED}[!]${NC} $1"; }
+warn()    { echo -e "${YELLOW}[!]${NC} $1"; }
+err()     { echo -e "${RED}[✗]${NC} $1"; }
 section() { echo -e "\n${CYAN}══════════════════════════════${NC}\n${CYAN} $1${NC}\n${CYAN}══════════════════════════════${NC}"; }
 
 # ── Pre-flight Checks ────────────────────────────────────────
 section "Pre-flight Checks"
 
 if [ "$EUID" -eq 0 ]; then
-    warn "Do not run as root. Run as your normal user with sudo access."
+    err "Do not run as root. Run as your normal user with sudo access."
     exit 1
 fi
 
 if ! command -v pacman &>/dev/null; then
-    warn "This script is for Arch Linux only."
+    err "This script is for Arch Linux only."
     exit 1
 fi
 
@@ -89,7 +91,7 @@ PACMAN_PACKAGES=(
     # Clipboard
     wl-clipboard cliphist
     # Dev
-    python-pip git
+    python-pip
     # Misc
     7zip cronie
 )
@@ -106,7 +108,6 @@ AUR_PACKAGES=(
     visual-studio-code-bin
     whatsapp-for-linux-git
     networkmanager-dmenu-git
-    cliphist
 )
 
 log "Installing AUR packages..."
@@ -152,7 +153,9 @@ ok "Wallpapers → ~/Pictures/Wallpapers ($(ls "$DOTFILES_DIR/wallpapers" | wc -
 section "Setting Permissions"
 
 chmod +x "$HOME_DIR/.config/hypr/wallpaper.sh"
-chmod +x "$HOME_DIR/.config/waybar/netspeed.sh"
+chmod +x "$HOME_DIR/.config/hypr/fix-brave.sh"
+chmod +x "$HOME_DIR/.config/rofi/powermenu.sh"
+chmod +x "$HOME_DIR/.config/waybar/"*.sh
 [ -d "$HOME_DIR/.config/hypr/scripts" ] && chmod +x "$HOME_DIR/.config/hypr/scripts/"*
 ok "Permissions set"
 

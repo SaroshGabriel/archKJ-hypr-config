@@ -4,8 +4,8 @@
     "height": 35,
     "spacing": 4,
 
-    "modules-left": ["hyprland/workspaces", "custom/terminal", "custom/screenshot", "custom/brave", "custom/thunar", "custom/gcal"],
-    "modules-center": ["custom/clock"],
+    "modules-left": ["hyprland/workspaces", "custom/terminal", "custom/screenshot", "custom/brave", "custom/firefox", "custom/thunar", "custom/deluge", "custom/clipboard"],
+    "modules-center": ["clock"],
     "modules-right": ["custom/netdown", "custom/netup", "cpu", "memory", "network", "bluetooth", "pulseaudio", "custom/power", "temperature", "tray", "custom/battery"],
 
     "hyprland/workspaces": {
@@ -29,10 +29,11 @@
     },
 
     "clock": {
-        "format": " {:%I:%M:%S %p  %A  %d %B %Y}",
+        "interval": 1,
+        "format": "<span color='#EF3946'>{0:%I:%M:%S %p}</span>  <span color='#50fa7b'>{0:%A}</span>  <span color='#ffb86c'>{0:%d %B %Y}</span>",
         "format-calendar": "<span color='#EF3946'><b>{}</b></span>",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "on-click": "yad --calendar --title='📅 Calendar' --no-buttons --fixed --undecorated"
+        "on-click": "brave --new-window https://calendar.google.com"
     },
 
     "cpu": {
@@ -51,16 +52,6 @@
         "critical-threshold": 80,
         "format": "󰔏 {temperatureC}°C",
         "format-critical": "󰔏 {temperatureC}°C"
-    },
-
-    "battery": {
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "{icon} {capacity}%",
-        "format-charging": "󰂄 {capacity}%",
-        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
 
     "network": {
@@ -94,14 +85,14 @@
     },
 
     "custom/netdown": {
-        "exec": "/home/KJ/.config/waybar/netdown.sh",
+        "exec": "~/.config/waybar/netdown.sh",
         "interval": 2,
         "format": "{}",
         "tooltip": false
     },
 
     "custom/netup": {
-        "exec": "/home/KJ/.config/waybar/netup.sh",
+        "exec": "~/.config/waybar/netup.sh",
         "interval": 2,
         "format": "{}",
         "tooltip": false
@@ -113,15 +104,6 @@
         "format-off": "󰂲",
         "on-click": "blueman-manager",
         "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected"
-    },
-
-    "custom/clock": {
-        "exec": "~/.config/waybar/clock.sh",
-        "interval": 1,
-        "return-type": "json",
-        "format": "{}",
-        "tooltip": false,
-        "on-click": "brave --new-window https://calendar.google.com"
     },
 
     "custom/terminal": {
@@ -148,9 +130,21 @@
         "tooltip": false
     },
 
-    "custom/gcal": {
-        "format": "📅",
-        "on-click": "brave --new-window https://calendar.google.com",
+    "custom/firefox": {
+        "format": "󰈹",
+        "on-click": "firefox",
+        "tooltip": false
+    },
+
+    "custom/deluge": {
+        "format": "",
+        "on-click": "deluge",
+        "tooltip": false
+    },
+
+    "custom/clipboard": {
+        "format": "󰆏",
+        "on-click": "~/.config/waybar/clipboard.sh",
         "tooltip": false
     },
 
