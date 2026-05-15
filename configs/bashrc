@@ -145,5 +145,5 @@ labmap() {
   printf "${P}  %-22s${N} %-42s ${D}%-20s${N}\n" "Speedtest"       "REDACTED.internal"       ":8094"
   printf "${P}  %-22s${N} %-42s ${D}%-20s${N}\n" "Portfolio"       "chargeinmotion.dev"                 ":8090"
   echo -e "$LINE"
-  echo -e "  ${D}default pass: ${W}REDACTED${D}   ·   user: ${W}REDACTED${D}   ·   ratpi / ratpits${N}\n"
+  echo -e "  ${D}user: ${W}REDACTED${D}   ·   ssh: ${W}ratpi${D} / ${W}ratpits${D}   ·   pass: vault${N}\n"
 }
