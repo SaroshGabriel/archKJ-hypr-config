@@ -4,9 +4,9 @@
     "height": 35,
     "spacing": 4,
 
-    "modules-left": ["hyprland/workspaces", "custom/terminal", "custom/screenshot", "custom/brave", "custom/firefox", "custom/thunar", "custom/deluge", "custom/clipboard"],
+    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/screenshot", "custom/brave", "custom/firefox", "custom/thunar", "custom/deluge", "custom/spotify", "custom/clipboard", "mpris"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/netdown", "custom/netup", "cpu", "memory", "network", "bluetooth", "pulseaudio", "custom/power", "temperature", "tray", "custom/battery"],
+    "modules-right": ["custom/netspeed", "cpu", "memory", "temperature", "network", "bluetooth", "pulseaudio", "tray", "custom/battery", "custom/power"],
 
     "hyprland/workspaces": {
         "format": "{icon}",
@@ -23,9 +23,10 @@
         }
     },
 
-    "hyprland/window": {
-        "format": "{}",
-        "max-length": 40
+    "hyprland/submap": {
+        "format": "✦ {}",
+        "default-submap": "",
+        "max-length": 20
     },
 
     "clock": {
@@ -48,7 +49,7 @@
     },
 
     "temperature": {
-        "hwmon-path": "/sys/class/hwmon/hwmon5/temp1_input",
+        "thermal-zone": 8,
         "critical-threshold": 80,
         "format": "󰔏 {temperatureC}°C",
         "format-critical": "󰔏 {temperatureC}°C"
@@ -71,31 +72,45 @@
         "on-click": "pavucontrol"
     },
 
+    "mpris": {
+        "format": "{player_icon} {title}",
+        "format-paused": "⏸ {title}",
+        "player-icons": {
+            "default": "▶",
+            "spotify": "",
+            "firefox": "󰈹",
+            "brave": "󰖟",
+            "chromium": ""
+        },
+        "status-icons": {
+            "paused": "⏸"
+        },
+        "on-scroll-up": "previous",
+        "on-scroll-down": "next",
+        "max-length": 35,
+        "tooltip-format": "{title} — {artist}\n{album}\n{position} / {length}"
+    },
+
+    "custom/battery": {
+        "exec": "~/.config/waybar/battery.sh",
+        "return-type": "json",
+        "interval": 30,
+        "format": "{}",
+        "tooltip": true
+    },
+
     "custom/power": {
         "format": "⏻",
         "on-click": "/home/KJ/.config/rofi/powermenu.sh",
         "tooltip": false
     },
 
-    "custom/battery": {
-        "exec": "~/.config/waybar/battery.sh",
-        "interval": 30,
-        "format": "{}",
-        "tooltip": false
-    },
-
-    "custom/netdown": {
-        "exec": "~/.config/waybar/netdown.sh",
+    "custom/netspeed": {
+        "exec": "~/.config/waybar/netspeed.sh",
+        "return-type": "json",
         "interval": 2,
         "format": "{}",
-        "tooltip": false
-    },
-
-    "custom/netup": {
-        "exec": "~/.config/waybar/netup.sh",
-        "interval": 2,
-        "format": "{}",
-        "tooltip": false
+        "tooltip": true
     },
 
     "bluetooth": {
@@ -107,13 +122,13 @@
     },
 
     "custom/terminal": {
-        "format": "💻",
+        "format": "",
         "on-click": "kitty",
         "tooltip": false
     },
 
     "custom/screenshot": {
-        "format": "📸",
+        "format": "󰄄",
         "on-click": "hyprshot -m region --clipboard-only",
         "tooltip": false
     },
@@ -125,7 +140,7 @@
     },
 
     "custom/thunar": {
-        "format": "📁",
+        "format": "",
         "on-click": "thunar",
         "tooltip": false
     },
@@ -139,6 +154,12 @@
     "custom/deluge": {
         "format": "",
         "on-click": "deluge",
+        "tooltip": false
+    },
+
+    "custom/spotify": {
+        "format": "󰓇",
+        "on-click": "spotify",
         "tooltip": false
     },
 

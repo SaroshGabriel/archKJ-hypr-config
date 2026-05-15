@@ -46,9 +46,9 @@ window#waybar {
 #custom-firefox,
 #custom-thunar,
 #custom-deluge,
+#custom-spotify,
 #custom-clipboard,
-#custom-netdown,
-#custom-netup,
+#custom-netspeed,
 #custom-battery,
 #custom-power,
 #pulseaudio,
@@ -57,6 +57,7 @@ window#waybar {
 #memory,
 #temperature,
 #bluetooth,
+#mpris,
 #tray,
 #clock {
     background: rgba(10, 10, 20, 0.88);
@@ -65,6 +66,18 @@ window#waybar {
     margin: 5px 3px;
     padding: 0 10px;
     color: #ffffff;
+}
+
+/* ── Submap — hidden by default, appears when a named submap is active ── */
+#submap {
+    background: rgba(10, 10, 20, 0.88);
+    border: 1px solid rgba(255, 184, 108, 0.55);
+    border-radius: 12px;
+    margin: 5px 3px;
+    padding: 0 10px;
+    color: #ffb86c;
+    font-weight: bold;
+    min-width: 0;
 }
 
 /* ── Clock ── */
@@ -92,6 +105,7 @@ window#waybar {
 #custom-firefox,
 #custom-thunar,
 #custom-deluge,
+#custom-spotify,
 #custom-clipboard {
     font-size: 15px;
 }
@@ -102,31 +116,30 @@ window#waybar {
 #custom-firefox:hover,
 #custom-thunar:hover,
 #custom-deluge:hover,
+#custom-spotify:hover,
 #custom-clipboard:hover {
     background: rgba(239, 57, 70, 0.2);
     border-color: rgba(239, 57, 70, 0.6);
 }
 
 /* ── Individual left icon colours ── */
+#custom-terminal  { color: #00d4d4; }
 #custom-firefox   { color: #ff9055; }
+#custom-thunar    { color: #ffb86c; }
 #custom-deluge    { color: #50fa7b; }
+#custom-spotify   { color: #1DB954; }
 #custom-clipboard { color: #bd93f9; }
 
-/* ── Network speed — fixed width stops the pill resizing ── */
-#custom-netdown {
+/* ── Network speed ── */
+#custom-netspeed {
     color: #50fa7b;
-    min-width: 85px;
-    padding: 0 6px;
-}
-#custom-netup {
-    color: #f1fa8c;
-    min-width: 85px;
-    padding: 0 6px;
+    min-width: 120px;
+    padding: 0 8px;
 }
 
 /* ── System stats ── */
-#cpu        { color: #ff6b6b; }
-#memory     { color: #EF3946; }
+#cpu    { color: #ff6b6b; }
+#memory { color: #8be9fd; }
 
 /* ── Temperature ── */
 #temperature { color: #ffaa00; }
@@ -138,18 +151,26 @@ window#waybar {
 }
 
 /* ── Battery ── */
-#custom-battery { color: #EF3946; }
+#custom-battery              { color: #50fa7b; }
+#custom-battery.warning      { color: #ffb86c; }
+#custom-battery.critical     { color: #EF3946; animation: blink 1s infinite; }
+#custom-battery.charging     { color: #50fa7b; }
+#custom-battery.ac           { color: #6b9fff; }
 
 /* ── Network ── */
 #network { color: #ff6b6b; }
 
 /* ── Audio ── */
-#pulseaudio { color: #EF3946; }
-#pulseaudio.muted { color: #444466; }
+#pulseaudio        { color: #bd93f9; }
+#pulseaudio.muted  { color: #444466; }
 
 /* ── Bluetooth ── */
-#bluetooth { color: #6b9fff; }
+#bluetooth     { color: #6b9fff; }
 #bluetooth.off { color: #444466; }
+
+/* ── MPRIS ── */
+#mpris        { color: #bd93f9; }
+#mpris.paused { color: #555566; }
 
 /* ── Tray ── */
 #tray { padding: 0 8px; }
@@ -160,7 +181,9 @@ window#waybar {
 #temperature:hover,
 #network:hover,
 #pulseaudio:hover,
-#bluetooth:hover {
+#bluetooth:hover,
+#custom-battery:hover,
+#mpris:hover {
     background: rgba(239, 57, 70, 0.12);
     border-color: rgba(239, 57, 70, 0.6);
 }
