@@ -122,7 +122,7 @@
     },
 
     "custom/terminal": {
-        "format": "",
+        "format": "󰄛",
         "on-click": "kitty",
         "tooltip": false
     },
@@ -140,7 +140,7 @@
     },
 
     "custom/thunar": {
-        "format": "",
+        "format": "󰉋",
         "on-click": "thunar",
         "tooltip": false
     },
@@ -152,7 +152,7 @@
     },
 
     "custom/deluge": {
-        "format": "",
+        "format": "󰒔",
         "on-click": "deluge",
         "tooltip": false
     },
