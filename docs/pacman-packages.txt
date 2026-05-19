@@ -10,6 +10,7 @@ breeze
 breeze-cursors
 breeze-gtk
 breeze-plymouth
+brightnessctl
 btop
 cava
 cliphist
@@ -22,6 +23,7 @@ dunst
 efibootmgr
 ethtool
 exfatprogs
+fail2ban
 firefox
 flatpak-kcm
 gimp
@@ -32,10 +34,15 @@ grsync
 grub
 gst-plugins-ugly
 htop
+hypridle
 hyprland
+hyprlock
 hyprshot
 imv
 inetutils
+inotify-tools
+intel-gpu-tools
+intel-media-driver
 iperf3
 iverilog
 iw
@@ -60,6 +67,7 @@ less
 libdvdcss
 libmad
 libreoffice-fresh
+libva-utils
 linux
 linux-firmware
 man-db
@@ -82,7 +90,7 @@ pavucontrol
 pipewire-pulse
 plymouth-kcm
 polkit-kde-agent
-proton-vpn-cli
+python-fonttools
 python-pip
 qqc2-breeze-style
 qt5ct
@@ -94,6 +102,7 @@ sddm
 sddm-kcm
 smartmontools
 spectacle
+spotify
 sudo
 tailscale
 tcl

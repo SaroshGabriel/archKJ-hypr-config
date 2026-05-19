@@ -37,23 +37,6 @@ alias pacfiles='pacman -Ql'
 alias orphans='pacman -Qdtq'
 alias cleanup='sudo pacman -Rns $(pacman -Qdtq) 2>/dev/null || echo "No orphans found"'
 
-# ── GIT ─────────────────────────────────────────────────────
-alias ga='git add .'
-alias gap='git add -p'                   # interactive stage
-alias gc='git commit -m'
-alias gp='git push'
-alias gpl='git pull'
-alias gs='git status'
-alias glog='git log --oneline --graph --all'
-alias gdiff='git diff'
-alias gclone='git clone --recurse-submodules'
-alias gswitch='git checkout'
-alias gnew='git checkout -b'
-alias gbranch='git branch -a'
-alias gundo='git reset --soft HEAD~1'
-alias gst='git stash'
-alias gpop='git stash pop'
-
 # ── PYTHON / DEV ────────────────────────────────────────────
 alias py='python3'
 alias ipy='ipython3'

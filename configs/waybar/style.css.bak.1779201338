@@ -51,13 +51,14 @@ window#waybar {
 #custom-netspeed,
 #custom-battery,
 #custom-power,
-#custom-cpu,
-#custom-gpu,
 #pulseaudio,
 #network,
+#cpu,
 #memory,
+#temperature,
 #bluetooth,
 #mpris,
+#tray,
 #clock {
     background: rgba(10, 10, 20, 0.88);
     border: 1px solid rgba(239, 57, 70, 0.35);
@@ -65,19 +66,6 @@ window#waybar {
     margin: 5px 3px;
     padding: 0 10px;
     color: #ffffff;
-}
-
-/* ── Tighter spacing for left-side launcher pills ── */
-#custom-terminal,
-#custom-screenshot,
-#custom-brave,
-#custom-firefox,
-#custom-thunar,
-#custom-deluge,
-#custom-spotify,
-#custom-clipboard {
-    margin: 5px 2px;
-    padding: 0 7px;
 }
 
 /* ── Submap — hidden by default, appears when a named submap is active ── */
@@ -142,22 +130,6 @@ window#waybar {
 #custom-spotify   { color: #1DB954; }
 #custom-clipboard { color: #bd93f9; }
 
-/* ── Brave: official lion-shield logo via PNG ── */
-#custom-brave {
-    background-image: url("/usr/share/icons/hicolor/256x256/apps/brave-desktop.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 16px 16px;
-    min-width: 22px;
-    color: transparent;
-}
-#custom-brave:hover {
-    background-image: url("/usr/share/icons/hicolor/256x256/apps/brave-desktop.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 16px 16px;
-}
-
 /* ── Network speed ── */
 #custom-netspeed {
     color: #50fa7b;
@@ -166,22 +138,12 @@ window#waybar {
 }
 
 /* ── System stats ── */
+#cpu    { color: #ff6b6b; }
 #memory { color: #8be9fd; }
 
-/* ── CPU ── */
-#custom-cpu          { color: #ff6b6b; }
-#custom-cpu.warning  { color: #ffb86c; }
-#custom-cpu.critical {
-    color: #ff0000;
-    background: rgba(255, 0, 0, 0.15);
-    border-color: rgba(255, 0, 0, 0.6);
-    animation: blink 1s infinite;
-}
-
-/* ── GPU ── */
-#custom-gpu          { color: #50fa7b; }
-#custom-gpu.warning  { color: #ffb86c; }
-#custom-gpu.critical {
+/* ── Temperature ── */
+#temperature { color: #ffaa00; }
+#temperature.critical {
     color: #ff0000;
     background: rgba(255, 0, 0, 0.15);
     border-color: rgba(255, 0, 0, 0.6);
@@ -209,18 +171,14 @@ window#waybar {
 /* ── MPRIS ── */
 #mpris        { color: #bd93f9; }
 #mpris.paused { color: #555566; }
-#mpris.stopped {
-    background: transparent;
-    border: none;
-    margin: 0;
-    padding: 0;
-    min-width: 0;
-}
+
+/* ── Tray ── */
+#tray { padding: 0 8px; }
 
 /* ── Hover for right-side stats ── */
-#custom-cpu:hover,
+#cpu:hover,
 #memory:hover,
-#custom-gpu:hover,
+#temperature:hover,
 #network:hover,
 #pulseaudio:hover,
 #bluetooth:hover,

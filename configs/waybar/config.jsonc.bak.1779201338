@@ -6,7 +6,7 @@
 
     "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/screenshot", "custom/brave", "custom/firefox", "custom/thunar", "custom/deluge", "custom/spotify", "custom/clipboard", "mpris"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/netspeed", "custom/cpu", "memory", "custom/gpu", "network", "bluetooth", "pulseaudio", "custom/battery", "custom/power"],
+    "modules-right": ["custom/netspeed", "cpu", "memory", "temperature", "network", "bluetooth", "pulseaudio", "tray", "custom/battery", "custom/power"],
 
     "hyprland/workspaces": {
         "format": "{icon}",
@@ -37,11 +37,10 @@
         "on-click": "brave --new-window https://calendar.google.com"
     },
 
-    "custom/cpu": {
-        "exec": "~/.config/waybar/cpu.sh",
-        "return-type": "json",
-        "restart-interval": 5,
-        "tooltip": true
+    "cpu": {
+        "format": "󰻠 {usage:3}%",
+        "tooltip": false,
+        "interval": 2
     },
 
     "memory": {
@@ -49,11 +48,11 @@
         "interval": 2
     },
 
-    "custom/gpu": {
-        "exec": "~/.config/waybar/gpu.sh",
-        "return-type": "json",
-        "restart-interval": 5,
-        "tooltip": true
+    "temperature": {
+        "thermal-zone": 8,
+        "critical-threshold": 80,
+        "format": "󰔏 {temperatureC}°C",
+        "format-critical": "󰔏 {temperatureC}°C"
     },
 
     "network": {
@@ -76,7 +75,6 @@
     "mpris": {
         "format": "{player_icon} {title}",
         "format-paused": "⏸ {title}",
-        "format-stopped": "",
         "player-icons": {
             "default": "▶",
             "spotify": "",
@@ -136,7 +134,7 @@
     },
 
     "custom/brave": {
-        "format": " ",
+        "format": "󰖟",
         "on-click": "brave",
         "tooltip": false
     },
@@ -154,7 +152,7 @@
     },
 
     "custom/deluge": {
-        "format": "󰇚",
+        "format": "󰒔",
         "on-click": "deluge",
         "tooltip": false
     },
@@ -169,5 +167,9 @@
         "format": "󰆏",
         "on-click": "~/.config/waybar/clipboard.sh",
         "tooltip": false
+    },
+
+    "tray": {
+        "spacing": 10
     }
 }
