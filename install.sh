@@ -119,7 +119,7 @@ section "Backing Up Existing Configs"
 
 BACKUP_DIR="$HOME_DIR/.config-backup-$(date +%Y%m%d%H%M%S)"
 mkdir -p "$BACKUP_DIR"
-for dir in hypr waybar rofi kitty hyprlock; do
+for dir in hypr waybar rofi kitty hyprlock networkmanager-dmenu; do
     if [ -d "$HOME_DIR/.config/$dir" ]; then
         cp -r "$HOME_DIR/.config/$dir" "$BACKUP_DIR/"
         log "Backed up ~/.config/$dir"
@@ -139,6 +139,11 @@ done
 cp -r "$DOTFILES_DIR/configs/hyprlock" "$HOME_DIR/.config/"
 ok "~/.config/hyprlock installed"
 
+if [ -d "$DOTFILES_DIR/configs/networkmanager-dmenu" ]; then
+    cp -r "$DOTFILES_DIR/configs/networkmanager-dmenu" "$HOME_DIR/.config/"
+    ok "~/.config/networkmanager-dmenu installed"
+fi
+
 cp "$DOTFILES_DIR/configs/bashrc" "$HOME_DIR/.bashrc"
 ok "~/.bashrc installed"
 
@@ -154,7 +159,7 @@ section "Setting Permissions"
 
 chmod +x "$HOME_DIR/.config/hypr/wallpaper.sh"
 chmod +x "$HOME_DIR/.config/hypr/fix-brave.sh"
-chmod +x "$HOME_DIR/.config/rofi/powermenu.sh"
+chmod +x "$HOME_DIR/.config/rofi/"*.sh
 chmod +x "$HOME_DIR/.config/waybar/"*.sh
 [ -d "$HOME_DIR/.config/hypr/scripts" ] && chmod +x "$HOME_DIR/.config/hypr/scripts/"*
 ok "Permissions set"

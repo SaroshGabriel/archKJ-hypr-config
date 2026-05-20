@@ -74,6 +74,7 @@ mkdir -p "$DOTFILES_DIR/configs/waybar"
 mkdir -p "$DOTFILES_DIR/configs/rofi"
 mkdir -p "$DOTFILES_DIR/configs/kitty"
 mkdir -p "$DOTFILES_DIR/configs/hyprlock"
+mkdir -p "$DOTFILES_DIR/configs/networkmanager-dmenu"
 mkdir -p "$DOTFILES_DIR/wallpapers"
 mkdir -p "$DOTFILES_DIR/docs"
 mkdir -p "$DOTFILES_DIR/scripts"
@@ -120,6 +121,14 @@ if [ -d "$HOME_DIR/.config/hyprlock" ]; then
     ok "hyprlock configs collected"
 else
     warn "~/.config/hyprlock not found, skipping"
+fi
+
+# NetworkManager dmenu (rofi-driven wifi menu config)
+if [ -d "$HOME_DIR/.config/networkmanager-dmenu" ]; then
+    cp -r "$HOME_DIR/.config/networkmanager-dmenu/"* "$DOTFILES_DIR/configs/networkmanager-dmenu/"
+    ok "networkmanager-dmenu configs collected"
+else
+    warn "~/.config/networkmanager-dmenu not found, skipping"
 fi
 
 # Bashrc
