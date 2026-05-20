@@ -1,0 +1,17 @@
+/* Shared cyberpunk-styled popup: extends cyberpunk.rasi with the wider, tighter
+   layout used by the Hyprland-shortcuts popup. Per-menu line counts are set via
+   `-theme-str 'listview { lines: N; }'` at invocation time. */
+
+@theme "cyberpunk"
+
+* {
+    font: "JetBrainsMono Nerd Font 11";
+}
+
+window {
+    width: 720px;
+}
+
+element {
+    padding: 4px 12px;
+}

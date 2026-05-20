@@ -4,7 +4,7 @@
     "height": 35,
     "spacing": 4,
 
-    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/screenshot", "custom/brave", "custom/firefox", "custom/thunar", "custom/deluge", "custom/spotify", "custom/clipboard", "mpris"],
+    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/shortcuts", "custom/terminal", "custom/screenshot", "custom/brave", "custom/firefox", "custom/thunar", "custom/deluge", "custom/clipboard", "mpris"],
     "modules-center": ["clock"],
     "modules-right": ["custom/netspeed", "custom/cpu", "memory", "custom/gpu", "network", "bluetooth", "pulseaudio", "custom/battery", "custom/power"],
 
@@ -79,7 +79,6 @@
         "format-stopped": "",
         "player-icons": {
             "default": "▶",
-            "spotify": "",
             "firefox": "󰈹",
             "brave": "󰖟",
             "chromium": ""
@@ -119,7 +118,7 @@
         "format": "󰂯",
         "format-connected": "󰂱 {device_alias}",
         "format-off": "󰂲",
-        "on-click": "blueman-manager",
+        "on-click": "~/.config/rofi/bluetooth.sh",
         "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected"
     },
 
@@ -159,15 +158,16 @@
         "tooltip": false
     },
 
-    "custom/spotify": {
-        "format": "󰓇",
-        "on-click": "spotify",
-        "tooltip": false
-    },
-
     "custom/clipboard": {
         "format": "󰆏",
         "on-click": "~/.config/waybar/clipboard.sh",
         "tooltip": false
+    },
+
+    "custom/shortcuts": {
+        "format": "󰌌",
+        "on-click": "~/.config/waybar/shortcuts.sh",
+        "tooltip": true,
+        "tooltip-format": "Hyprland keybindings"
     }
 }

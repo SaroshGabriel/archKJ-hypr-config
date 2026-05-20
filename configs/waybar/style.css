@@ -46,8 +46,8 @@ window#waybar {
 #custom-firefox,
 #custom-thunar,
 #custom-deluge,
-#custom-spotify,
 #custom-clipboard,
+#custom-shortcuts,
 #custom-netspeed,
 #custom-battery,
 #custom-power,
@@ -74,7 +74,6 @@ window#waybar {
 #custom-firefox,
 #custom-thunar,
 #custom-deluge,
-#custom-spotify,
 #custom-clipboard {
     margin: 5px 2px;
     padding: 0 7px;
@@ -117,7 +116,6 @@ window#waybar {
 #custom-firefox,
 #custom-thunar,
 #custom-deluge,
-#custom-spotify,
 #custom-clipboard {
     font-size: 15px;
 }
@@ -128,8 +126,8 @@ window#waybar {
 #custom-firefox:hover,
 #custom-thunar:hover,
 #custom-deluge:hover,
-#custom-spotify:hover,
-#custom-clipboard:hover {
+#custom-clipboard:hover,
+#custom-shortcuts:hover {
     background: rgba(239, 57, 70, 0.2);
     border-color: rgba(239, 57, 70, 0.6);
 }
@@ -139,8 +137,8 @@ window#waybar {
 #custom-firefox   { color: #ff9055; }
 #custom-thunar    { color: #ffb86c; }
 #custom-deluge    { color: #50fa7b; }
-#custom-spotify   { color: #1DB954; }
 #custom-clipboard { color: #bd93f9; }
+#custom-shortcuts { color: #f1fa8c; }
 
 /* ── Brave: official lion-shield logo via PNG ── */
 #custom-brave {
