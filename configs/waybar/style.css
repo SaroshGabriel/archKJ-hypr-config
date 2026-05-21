@@ -1,6 +1,6 @@
 * {
     font-family: JetBrainsMono Nerd Font;
-    font-size: 13px;
+    font-size: 15px;
     min-height: 0;
 }
 
@@ -13,17 +13,17 @@ window#waybar {
 #workspaces {
     background: rgba(10, 10, 20, 0.88);
     border: 1px solid rgba(239, 57, 70, 0.35);
-    border-radius: 12px;
-    margin: 5px 3px 5px 8px;
-    padding: 0 4px;
+    border-radius: 14px;
+    margin: 6px 3px 6px 9px;
+    padding: 0 5px;
 }
 
 #workspaces button {
-    padding: 0 7px;
+    padding: 0 8px;
     color: #aaaaaa;
-    border-radius: 8px;
+    border-radius: 9px;
     margin: 2px;
-    font-size: 17px;
+    font-size: 20px;
     background: transparent;
     border: none;
 }
@@ -44,6 +44,7 @@ window#waybar {
 #custom-screenshot,
 #custom-brave,
 #custom-firefox,
+#custom-telegram,
 #custom-thunar,
 #custom-deluge,
 #custom-clipboard,
@@ -54,6 +55,7 @@ window#waybar {
 #custom-cpu,
 #custom-gpu,
 #pulseaudio,
+#backlight,
 #network,
 #memory,
 #bluetooth,
@@ -61,9 +63,9 @@ window#waybar {
 #clock {
     background: rgba(10, 10, 20, 0.88);
     border: 1px solid rgba(239, 57, 70, 0.35);
-    border-radius: 12px;
-    margin: 5px 3px;
-    padding: 0 10px;
+    border-radius: 14px;
+    margin: 6px 3px;
+    padding: 0 12px;
     color: #ffffff;
 }
 
@@ -72,20 +74,21 @@ window#waybar {
 #custom-screenshot,
 #custom-brave,
 #custom-firefox,
+#custom-telegram,
 #custom-thunar,
 #custom-deluge,
 #custom-clipboard {
-    margin: 5px 2px;
-    padding: 0 7px;
+    margin: 6px 2px;
+    padding: 0 8px;
 }
 
 /* ── Submap — hidden by default, appears when a named submap is active ── */
 #submap {
     background: rgba(10, 10, 20, 0.88);
     border: 1px solid rgba(255, 184, 108, 0.55);
-    border-radius: 12px;
-    margin: 5px 3px;
-    padding: 0 10px;
+    border-radius: 14px;
+    margin: 6px 3px;
+    padding: 0 12px;
     color: #ffb86c;
     font-weight: bold;
     min-width: 0;
@@ -95,14 +98,14 @@ window#waybar {
 #clock {
     color: #EF3946;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 /* ── Power button ── */
 #custom-power {
     color: #EF3946;
-    font-size: 15px;
-    padding: 0 12px;
+    font-size: 17px;
+    padding: 0 14px;
     border-color: rgba(239, 57, 70, 0.6);
 }
 #custom-power:hover {
@@ -114,16 +117,18 @@ window#waybar {
 #custom-screenshot,
 #custom-brave,
 #custom-firefox,
+#custom-telegram,
 #custom-thunar,
 #custom-deluge,
 #custom-clipboard {
-    font-size: 15px;
+    font-size: 17px;
 }
 
 #custom-terminal:hover,
 #custom-screenshot:hover,
 #custom-brave:hover,
 #custom-firefox:hover,
+#custom-telegram:hover,
 #custom-thunar:hover,
 #custom-deluge:hover,
 #custom-clipboard:hover,
@@ -135,6 +140,7 @@ window#waybar {
 /* ── Individual left icon colours ── */
 #custom-terminal  { color: #00d4d4; }
 #custom-firefox   { color: #ff9055; }
+#custom-telegram  { color: #3390ec; }
 #custom-thunar    { color: #ffb86c; }
 #custom-deluge    { color: #50fa7b; }
 #custom-clipboard { color: #bd93f9; }
@@ -145,29 +151,35 @@ window#waybar {
     background-image: url("/usr/share/icons/hicolor/256x256/apps/brave-desktop.png");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 16px 16px;
-    min-width: 22px;
+    background-size: 18px 18px;
+    min-width: 25px;
     color: transparent;
 }
 #custom-brave:hover {
     background-image: url("/usr/share/icons/hicolor/256x256/apps/brave-desktop.png");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 16px 16px;
+    background-size: 18px 18px;
 }
 
 /* ── Network speed ── */
 #custom-netspeed {
     color: #50fa7b;
-    min-width: 120px;
-    padding: 0 8px;
+    min-width: 138px;
+    padding: 0 9px;
 }
 
 /* ── System stats ── */
-#memory { color: #8be9fd; }
+#memory {
+    color: #8be9fd;
+    min-width: 75px;
+}
 
 /* ── CPU ── */
-#custom-cpu          { color: #ff6b6b; }
+#custom-cpu {
+    color: #ff6b6b;
+    min-width: 110px;
+}
 #custom-cpu.warning  { color: #ffb86c; }
 #custom-cpu.critical {
     color: #ff0000;
@@ -177,7 +189,10 @@ window#waybar {
 }
 
 /* ── GPU ── */
-#custom-gpu          { color: #50fa7b; }
+#custom-gpu {
+    color: #50fa7b;
+    min-width: 110px;
+}
 #custom-gpu.warning  { color: #ffb86c; }
 #custom-gpu.critical {
     color: #ff0000;
@@ -200,6 +215,9 @@ window#waybar {
 #pulseaudio        { color: #bd93f9; }
 #pulseaudio.muted  { color: #444466; }
 
+/* ── Backlight ── */
+#backlight { color: #ffd866; }
+
 /* ── Bluetooth ── */
 #bluetooth     { color: #6b9fff; }
 #bluetooth.off { color: #444466; }
@@ -221,6 +239,7 @@ window#waybar {
 #custom-gpu:hover,
 #network:hover,
 #pulseaudio:hover,
+#backlight:hover,
 #bluetooth:hover,
 #custom-battery:hover,
 #mpris:hover {
@@ -231,4 +250,56 @@ window#waybar {
 /* ── Blink animation ── */
 @keyframes blink {
     to { opacity: 0.3; }
+}
+
+/* ───────────────────────────────────────────────────────────── */
+/* ── Laptop bar (eDP-1) — 10% scale up over base sizes      ── */
+/* ── Scoped via `name: "laptop"` → window#waybar.laptop      ── */
+/* ───────────────────────────────────────────────────────────── */
+window#waybar.laptop * {
+    font-size: 17px;
+}
+
+window#waybar.laptop #workspaces button {
+    font-size: 22px;
+    padding: 0 9px;
+}
+
+window#waybar.laptop #clock {
+    font-size: 17px;
+}
+
+window#waybar.laptop #custom-power {
+    font-size: 19px;
+    padding: 0 15px;
+}
+
+window#waybar.laptop #custom-terminal,
+window#waybar.laptop #custom-brave,
+window#waybar.laptop #custom-firefox,
+window#waybar.laptop #custom-telegram,
+window#waybar.laptop #custom-deluge,
+window#waybar.laptop #custom-shortcuts,
+window#waybar.laptop #custom-screenshot,
+window#waybar.laptop #custom-thunar,
+window#waybar.laptop #custom-clipboard {
+    font-size: 19px;
+}
+
+window#waybar.laptop #pulseaudio,
+window#waybar.laptop #backlight,
+window#waybar.laptop #network,
+window#waybar.laptop #memory,
+window#waybar.laptop #bluetooth,
+window#waybar.laptop #mpris,
+window#waybar.laptop #clock {
+    border-radius: 15px;
+    margin: 7px 4px;
+    padding: 0 13px;
+}
+
+window#waybar.laptop #workspaces {
+    border-radius: 15px;
+    margin: 7px 4px 7px 10px;
+    padding: 0 6px;
 }

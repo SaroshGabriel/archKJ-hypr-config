@@ -1,23 +1,26 @@
+[
 {
+    "name": "external",
+    "output": "HDMI-A-2",
     "layer": "top",
     "position": "top",
-    "height": 35,
-    "spacing": 4,
+    "height": 40,
+    "spacing": 5,
 
-    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/shortcuts", "custom/terminal", "custom/screenshot", "custom/brave", "custom/firefox", "custom/thunar", "custom/deluge", "custom/clipboard", "mpris"],
+    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/brave", "custom/firefox", "custom/telegram", "custom/deluge", "mpris"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/netspeed", "custom/cpu", "memory", "custom/gpu", "network", "bluetooth", "pulseaudio", "custom/battery", "custom/power"],
+    "modules-right": ["custom/shortcuts", "custom/screenshot", "custom/thunar", "custom/clipboard", "custom/netspeed", "custom/cpu", "memory", "custom/gpu", "custom/power"],
 
     "hyprland/workspaces": {
         "format": "{icon}",
         "on-click": "activate",
         "persistent-workspaces": {
-            "HDMI-A-2": [1, 2, 3, 4, 5, 6, 7, 8, 9],
-            "eDP-1": [11, 12, 13, 14, 15, 16, 17, 18, 19]
+            "HDMI-A-2": [1, 2, 3, 4],
+            "eDP-1": [11, 12, 13, 14]
         },
         "format-icons": {
-            "1": "፩", "2": "፪", "3": "፫", "4": "፬", "5": "፭", "6": "፮", "7": "፯", "8": "፰", "9": "፱",
-            "11": "♔", "12": "♕", "13": "♖", "14": "♗", "15": "♘", "16": "♙", "17": "♚", "18": "♛", "19": "♜",
+            "1": "፩", "2": "፪", "3": "፫", "4": "፬",
+            "11": "♔", "12": "♕", "13": "♖", "14": "♗",
             "urgent": "",
             "default": ""
         }
@@ -56,6 +59,135 @@
         "tooltip": true
     },
 
+    "mpris": {
+        "format": "{player_icon} {title}",
+        "format-paused": "⏸ {title}",
+        "format-stopped": "",
+        "player-icons": {
+            "default": "▶",
+            "firefox": "󰈹",
+            "brave": "󰖟",
+            "chromium": ""
+        },
+        "status-icons": {
+            "paused": "⏸"
+        },
+        "on-scroll-up": "previous",
+        "on-scroll-down": "next",
+        "max-length": 35,
+        "tooltip-format": "{title} — {artist}\n{album}\n{position} / {length}"
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "on-click": "/home/KJ/.config/rofi/powermenu.sh",
+        "tooltip": false
+    },
+
+    "custom/netspeed": {
+        "exec": "~/.config/waybar/netspeed.sh",
+        "return-type": "json",
+        "restart-interval": 5,
+        "format": "{}",
+        "tooltip": true
+    },
+
+    "custom/terminal": {
+        "format": "󰄛",
+        "on-click": "kitty",
+        "tooltip": false
+    },
+
+    "custom/screenshot": {
+        "format": "󰄄",
+        "on-click": "hyprshot -m region --clipboard-only",
+        "tooltip": false
+    },
+
+    "custom/brave": {
+        "format": " ",
+        "on-click": "brave",
+        "tooltip": false
+    },
+
+    "custom/thunar": {
+        "format": "󰉋",
+        "on-click": "thunar",
+        "tooltip": false
+    },
+
+    "custom/firefox": {
+        "format": "󰈹",
+        "on-click": "firefox",
+        "tooltip": false
+    },
+
+    "custom/telegram": {
+        "format": "",
+        "on-click": "Telegram",
+        "tooltip": false
+    },
+
+    "custom/deluge": {
+        "format": "󰇚",
+        "on-click": "deluge",
+        "tooltip": false
+    },
+
+    "custom/clipboard": {
+        "format": "󰆏",
+        "on-click": "~/.config/waybar/clipboard.sh",
+        "tooltip": false
+    },
+
+    "custom/shortcuts": {
+        "format": "󰌌",
+        "on-click": "~/.config/waybar/shortcuts.sh",
+        "tooltip": true,
+        "tooltip-format": "Hyprland keybindings"
+    }
+},
+{
+    "name": "laptop",
+    "output": "eDP-1",
+    "layer": "top",
+    "position": "top",
+    "height": 44,
+    "spacing": 6,
+
+    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/brave", "custom/firefox", "custom/telegram", "custom/deluge", "mpris"],
+    "modules-center": ["clock"],
+    "modules-right": ["custom/shortcuts", "custom/screenshot", "custom/thunar", "custom/clipboard", "network", "bluetooth", "pulseaudio", "backlight", "custom/battery", "custom/power"],
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "persistent-workspaces": {
+            "HDMI-A-2": [1, 2, 3, 4],
+            "eDP-1": [11, 12, 13, 14]
+        },
+        "format-icons": {
+            "1": "፩", "2": "፪", "3": "፫", "4": "፬",
+            "11": "♔", "12": "♕", "13": "♖", "14": "♗",
+            "urgent": "",
+            "default": ""
+        }
+    },
+
+    "hyprland/submap": {
+        "format": "✦ {}",
+        "default-submap": "",
+        "max-length": 20
+    },
+
+    "clock": {
+        "interval": 1,
+        "format": "<span color='#EF3946'>{0:%I:%M:%S %p}</span>  <span color='#50fa7b'>{0:%A}</span>  <span color='#ffb86c'>{0:%d %B %Y}</span>",
+        "format-calendar": "<span color='#EF3946'><b>{}</b></span>",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "brave --new-window https://calendar.google.com"
+    },
+
     "network": {
         "format-wifi": "󰤨 {signalStrength}%",
         "format-ethernet": "󰈀 Connected",
@@ -71,6 +203,14 @@
             "default": ["󰕿", "󰖀", "󰕾"]
         },
         "on-click": "pavucontrol"
+    },
+
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-",
+        "tooltip": false
     },
 
     "mpris": {
@@ -104,14 +244,6 @@
         "format": "⏻",
         "on-click": "/home/KJ/.config/rofi/powermenu.sh",
         "tooltip": false
-    },
-
-    "custom/netspeed": {
-        "exec": "~/.config/waybar/netspeed.sh",
-        "return-type": "json",
-        "interval": 2,
-        "format": "{}",
-        "tooltip": true
     },
 
     "bluetooth": {
@@ -152,6 +284,12 @@
         "tooltip": false
     },
 
+    "custom/telegram": {
+        "format": "",
+        "on-click": "Telegram",
+        "tooltip": false
+    },
+
     "custom/deluge": {
         "format": "󰇚",
         "on-click": "deluge",
@@ -171,3 +309,4 @@
         "tooltip-format": "Hyprland keybindings"
     }
 }
+]
