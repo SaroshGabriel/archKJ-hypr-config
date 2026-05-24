@@ -1,6 +1,7 @@
 #!/bin/bash
 for hwmon in /sys/class/hwmon/hwmon*; do
-    if [ "$(cat $hwmon/name 2>/dev/null)" = "coretemp" ]; then
+    name=$(cat "$hwmon/name" 2>/dev/null)
+    if [ "$name" = "coretemp" ] || [ "$name" = "k10temp" ]; then
         temp=$(cat $hwmon/temp1_input 2>/dev/null)
         if [ -n "$temp" ]; then
             t=$((temp / 1000))

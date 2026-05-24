@@ -1,10 +1,13 @@
 #!/bin/bash
-capacity=$(cat /sys/class/power_supply/BAT0/capacity 2>/dev/null)
-if [[ -z "$capacity" ]]; then
-    capacity=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 2>/dev/null \
+# Dynamically find the first BAT* power supply (handles BAT0, BAT1, etc.)
+BAT_PATH=$(find /sys/class/power_supply -maxdepth 1 -name 'BAT*' | sort | head -1)
+capacity=$(cat "${BAT_PATH}/capacity" 2>/dev/null)
+if [[ -z "$capacity" && -n "$BAT_PATH" ]]; then
+    BAT_NAME=$(basename "$BAT_PATH")
+    capacity=$(upower -i "/org/freedesktop/UPower/devices/battery_${BAT_NAME}" 2>/dev/null \
         | awk '/percentage/{gsub(/%/,"",$2); print int($2)}')
 fi
-status=$(cat /sys/class/power_supply/BAT0/status 2>/dev/null || echo "Unknown")
+status=$(cat "${BAT_PATH}/status" 2>/dev/null || echo "Unknown")
 
 # If capacity is 0 or empty and not actually discharging → battery not detected, show AC
 if [[ -z "$capacity" || "$capacity" -eq 0 ]] && [[ "$status" != "Discharging" ]]; then
