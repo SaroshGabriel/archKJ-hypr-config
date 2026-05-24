@@ -292,6 +292,8 @@ window#waybar.laptop #network,
 window#waybar.laptop #memory,
 window#waybar.laptop #bluetooth,
 window#waybar.laptop #mpris,
+window#waybar.laptop #custom-battery,
+window#waybar.laptop #custom-netspeed,
 window#waybar.laptop #clock {
     border-radius: 15px;
     margin: 7px 4px;

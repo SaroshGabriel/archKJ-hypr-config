@@ -152,7 +152,7 @@
     "output": "eDP-1",
     "layer": "top",
     "position": "top",
-    "height": 44,
+    "height": 48,
     "spacing": 6,
 
     "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/brave", "custom/firefox", "custom/telegram", "custom/deluge", "mpris"],
