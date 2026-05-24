@@ -22,10 +22,12 @@ INTERVAL = 2.0  # seconds — matches gpu.sh cadence
 
 
 def find_coretemp():
-    for p in sorted(Path("/sys/class/hwmon").iterdir()):
-        n = p / "name"
-        if n.exists() and n.read_text().strip() == "coretemp":
-            return p / "temp1_input"
+    # AMD uses k10temp; Intel uses coretemp
+    for driver in ("k10temp", "coretemp"):
+        for p in sorted(Path("/sys/class/hwmon").iterdir()):
+            n = p / "name"
+            if n.exists() and n.read_text().strip() == driver:
+                return p / "temp1_input"
     return None
 
 

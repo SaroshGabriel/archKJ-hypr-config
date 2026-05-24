@@ -1,111 +1,95 @@
 #!/usr/bin/env python3
 """
-Waybar Intel iGPU module — streams intel_gpu_top -J at 2s sample interval
-and emits one JSON line per sample with usage %, temperature, and per-client
-breakdown in the tooltip.
+Waybar AMD iGPU module — reads Vega iGPU stats from sysfs.
+Dynamically locates the correct hwmon by PCI slot (card2 / 0000:04:00.0).
 
-Requires:
-  - intel-gpu-tools installed
-  - /usr/bin/intel_gpu_top with cap_perfmon+ep (so it runs as user)
-
-Drop-in module config:
-  "custom/gpu": {
-    "exec": "~/.config/waybar/gpu.sh",
-    "return-type": "json",
-    "restart-interval": 5
-  }
+Emits one JSON line per INTERVAL seconds with frequency, temperature,
+and current P-state in the tooltip.
 """
 import json
-import subprocess
-import sys
+import time
 from pathlib import Path
 
+INTERVAL = 2.0
+IGPU_PCI_SLOT = "0000:04:00.0"
 
-def find_coretemp():
-    for p in sorted(Path("/sys/class/hwmon").iterdir()):
-        name_file = p / "name"
-        if name_file.exists() and name_file.read_text().strip() == "coretemp":
-            return p / "temp1_input"
+
+def find_igpu_hwmon():
+    for hwmon in sorted(Path("/sys/class/hwmon").iterdir()):
+        name_f = hwmon / "name"
+        uevent_f = hwmon / "device" / "uevent"
+        if not name_f.exists():
+            continue
+        if name_f.read_text().strip() != "amdgpu":
+            continue
+        if uevent_f.exists() and IGPU_PCI_SLOT in uevent_f.read_text():
+            return hwmon
     return None
 
 
-def read_temp(temp_file):
-    if not temp_file or not temp_file.exists():
-        return 0
+def read_int(path):
     try:
-        return int(temp_file.read_text().strip()) // 1000
+        return int(Path(path).read_text().strip())
     except (ValueError, OSError):
         return 0
 
 
-def emit(busy, freq, temp, clients):
-    tops = []
-    for c in clients.values():
-        nm = c.get("name", "?")
-        cb = float(c.get("engine-classes", {}).get("Render/3D", {}).get("busy", 0) or 0)
-        if cb > 0.5:
-            tops.append((cb, nm))
-    tops.sort(reverse=True)
-    top_lines = "\n".join(f"  {nm}: {b:.0f}%" for b, nm in tops[:6])
-
-    cls = ""
-    if busy >= 80:
-        cls = "critical"
-    elif busy >= 50:
-        cls = "warning"
-
-    text = f"\U000f08ae  {int(round(busy))}%  {temp}°"
-    tip = f"Intel HD 620\nGPU: {int(round(busy))}% · {int(round(freq))} MHz · {temp}°C"
-    if top_lines:
-        tip += f"\n\nClients (Render/3D):\n{top_lines}"
-
-    print(json.dumps({"text": text, "tooltip": tip, "class": cls}), flush=True)
+def read_pstate(card_path):
+    """Parse pp_dpm_sclk — return (active_mhz, all_states_str)."""
+    sclk = card_path / "pp_dpm_sclk"
+    if not sclk.exists():
+        return 0, ""
+    lines = sclk.read_text().strip().splitlines()
+    active_mhz = 0
+    states = []
+    for line in lines:
+        active = line.endswith("*")
+        parts = line.rstrip(" *").split()
+        if len(parts) >= 2:
+            mhz_str = parts[1].rstrip("Mhz")
+            try:
+                mhz = int(mhz_str)
+            except ValueError:
+                mhz = 0
+            states.append(f"  {'▶' if active else ' '} {parts[1]}")
+            if active:
+                active_mhz = mhz
+    return active_mhz, "\n".join(states)
 
 
 def main():
-    temp_file = find_coretemp()
-    proc = subprocess.Popen(
-        ["intel_gpu_top", "-J", "-s", "2000"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-    )
+    hwmon = find_igpu_hwmon()
+    card_dev = Path("/sys/class/drm/card2/device")
 
-    buf = ""
     while True:
-        chunk = proc.stdout.read1(4096)
-        if not chunk:
-            break
-        buf += chunk.decode("utf-8", errors="replace")
-        while True:
-            start_idx = buf.find("{")
-            if start_idx < 0:
-                buf = ""
-                break
-            depth = 0
-            end_idx = -1
-            for i in range(start_idx, len(buf)):
-                c = buf[i]
-                if c == "{":
-                    depth += 1
-                elif c == "}":
-                    depth -= 1
-                    if depth == 0:
-                        end_idx = i
-                        break
-            if end_idx < 0:
-                buf = buf[start_idx:]
-                break
-            try:
-                obj = json.loads(buf[start_idx:end_idx + 1])
-                busy = float(obj.get("engines", {}).get("Render/3D", {}).get("busy", 0) or 0)
-                freq = float(obj.get("frequency", {}).get("actual", 0) or 0)
-                clients = obj.get("clients", {}) or {}
-                emit(busy, freq, read_temp(temp_file), clients)
-            except (json.JSONDecodeError, ValueError, TypeError):
-                pass
-            buf = buf[end_idx + 1:]
+        temp = 0
+        freq_mhz = 0
+        pstate_str = ""
 
-    sys.exit(proc.wait() or 1)
+        if hwmon:
+            temp = read_int(hwmon / "temp1_input") // 1000
+            freq_hz = read_int(hwmon / "freq1_input")
+            freq_mhz = freq_hz // 1_000_000
+
+        # pp_dpm_sclk gives a more readable P-state view
+        if card_dev.exists():
+            active_mhz, pstate_str = read_pstate(card_dev)
+            if active_mhz:
+                freq_mhz = active_mhz
+
+        cls = ""
+        if temp >= 85:
+            cls = "critical"
+        elif temp >= 70:
+            cls = "warning"
+
+        text = f"\U000f1515  {freq_mhz} MHz  {temp}°"
+        tip = f"AMD Vega iGPU\n{freq_mhz} MHz · {temp}°C"
+        if pstate_str:
+            tip += f"\n\nP-states:\n{pstate_str}"
+
+        print(json.dumps({"text": text, "tooltip": tip, "class": cls}), flush=True)
+        time.sleep(INTERVAL)
 
 
 if __name__ == "__main__":

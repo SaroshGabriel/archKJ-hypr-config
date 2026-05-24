@@ -1,7 +1,7 @@
 [
 {
     "name": "external",
-    "output": "HDMI-A-2",
+    "output": "HDMI-A-1",
     "layer": "top",
     "position": "top",
     "height": 40,
@@ -15,8 +15,8 @@
         "format": "{icon}",
         "on-click": "activate",
         "persistent-workspaces": {
-            "HDMI-A-2": [1, 2, 3, 4],
-            "eDP-1": [11, 12, 13, 14]
+            "HDMI-A-1": [11, 12, 13, 14],
+            "eDP-1": [1, 2, 3, 4]
         },
         "format-icons": {
             "1": "፩", "2": "፪", "3": "፫", "4": "፬",
@@ -80,7 +80,7 @@
 
     "custom/power": {
         "format": "⏻",
-        "on-click": "/home/KJ/.config/rofi/powermenu.sh",
+        "on-click": "~/.config/rofi/powermenu.sh",
         "tooltip": false
     },
 
@@ -163,8 +163,8 @@
         "format": "{icon}",
         "on-click": "activate",
         "persistent-workspaces": {
-            "HDMI-A-2": [1, 2, 3, 4],
-            "eDP-1": [11, 12, 13, 14]
+            "HDMI-A-1": [11, 12, 13, 14],
+            "eDP-1": [1, 2, 3, 4]
         },
         "format-icons": {
             "1": "፩", "2": "፪", "3": "፫", "4": "፬",
@@ -242,7 +242,7 @@
 
     "custom/power": {
         "format": "⏻",
-        "on-click": "/home/KJ/.config/rofi/powermenu.sh",
+        "on-click": "~/.config/rofi/powermenu.sh",
         "tooltip": false
     },
 
