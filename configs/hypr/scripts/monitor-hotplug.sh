@@ -17,8 +17,8 @@ _on_connect() {
     local mon="${1}"
     [[ "${mon}" == "eDP-1" ]] && return
 
-    # Assign workspaces 11-14 to the new monitor
-    for ws in 11 12 13 14; do
+    # Assign workspaces 11-19 to the new monitor
+    for ws in 11 12 13 14 15 16 17 18 19; do
         hyprctl keyword workspace "${ws}, monitor:${mon}" 2>/dev/null
     done
     # Set default workspace on external monitor
@@ -48,7 +48,7 @@ _on_disconnect() {
     [[ "${mon}" == "eDP-1" ]] && return
 
     # Move any workspaces from the removed monitor to eDP-1
-    for ws in 11 12 13 14; do
+    for ws in 11 12 13 14 15 16 17 18 19; do
         hyprctl keyword workspace "${ws}, monitor:eDP-1" 2>/dev/null
     done
 
