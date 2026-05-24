@@ -7,7 +7,7 @@
     "height": 46,
     "spacing": 5,
 
-    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/brave", "custom/firefox", "custom/telegram", "custom/deluge", "mpris"],
+    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/brave", "custom/firefox", "custom/telegram", "custom/qbittorrent", "mpris"],
     "modules-center": ["clock"],
     "modules-right": ["custom/shortcuts", "custom/screenshot", "custom/thunar", "custom/clipboard", "custom/netspeed", "custom/cpu", "memory", "custom/gpu", "custom/power"],
 
@@ -127,9 +127,9 @@
         "tooltip": false
     },
 
-    "custom/deluge": {
+    "custom/qbittorrent": {
         "format": "󰇚",
-        "on-click": "deluge",
+        "on-click": "qbittorrent",
         "tooltip": false
     },
 
@@ -154,7 +154,7 @@
     "height": 54,
     "spacing": 6,
 
-    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/brave", "custom/firefox", "custom/telegram", "custom/deluge", "mpris"],
+    "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/brave", "custom/firefox", "custom/telegram", "custom/qbittorrent", "mpris"],
     "modules-center": ["clock"],
     "modules-right": ["custom/shortcuts", "custom/screenshot", "custom/thunar", "custom/clipboard", "network", "bluetooth", "pulseaudio", "backlight", "custom/battery", "custom/power"],
 
@@ -288,9 +288,9 @@
         "tooltip": false
     },
 
-    "custom/deluge": {
+    "custom/qbittorrent": {
         "format": "󰇚",
-        "on-click": "deluge",
+        "on-click": "qbittorrent",
         "tooltip": false
     },
 
