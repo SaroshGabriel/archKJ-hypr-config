@@ -79,7 +79,11 @@ mkdir -p "$DOTFILES_DIR/wallpapers"
 mkdir -p "$DOTFILES_DIR/docs"
 mkdir -p "$DOTFILES_DIR/scripts"
 mkdir -p "$DOTFILES_DIR/configs/systemd-user"
+mkdir -p "$DOTFILES_DIR/configs/systemd-system"
 mkdir -p "$DOTFILES_DIR/configs/environment.d"
+mkdir -p "$DOTFILES_DIR/configs/sddm"
+mkdir -p "$DOTFILES_DIR/configs/grub"
+mkdir -p "$DOTFILES_DIR/scripts/system"
 ok "Folder structure ready"
 
 # ── Collect Configs ──────────────────────────────────────────
@@ -164,6 +168,31 @@ if [ -d "$HOME_DIR/.config/environment.d" ]; then
 else
     warn "~/.config/environment.d not found, skipping"
 fi
+
+# SDDM theme config + sddm.conf.d
+cp /usr/share/sddm/themes/sddm-astronaut-theme/Themes/archmac.conf \
+    "$DOTFILES_DIR/configs/sddm/archmac.conf" 2>/dev/null && ok "SDDM archmac.conf collected"
+[ -f /etc/sddm.conf.d/theme.conf ] && \
+    cp /etc/sddm.conf.d/theme.conf "$DOTFILES_DIR/configs/sddm/sddm.conf" && \
+    ok "sddm theme selection collected"
+
+# GRUB config
+[ -f /etc/default/grub ] && \
+    cp /etc/default/grub "$DOTFILES_DIR/configs/grub/default-grub" && \
+    ok "GRUB config collected"
+
+# System-level scripts (sddm wallpaper rotator, etc.)
+[ -f /usr/local/bin/sddm-random-wallpaper.sh ] && \
+    cp /usr/local/bin/sddm-random-wallpaper.sh "$DOTFILES_DIR/scripts/system/sddm-random-wallpaper.sh" && \
+    ok "sddm-random-wallpaper.sh collected"
+
+# System systemd units (root-owned services)
+[ -f /etc/systemd/system/sddm-wallpaper.service ] && \
+    cp /etc/systemd/system/sddm-wallpaper.service "$DOTFILES_DIR/configs/systemd-system/sddm-wallpaper.service" && \
+    ok "sddm-wallpaper.service collected"
+[ -f /etc/systemd/system/thermal-guardian.service ] && \
+    cp /etc/systemd/system/thermal-guardian.service "$DOTFILES_DIR/configs/systemd-system/thermal-guardian.service" && \
+    ok "thermal-guardian.service collected"
 
 # ── Collect Wallpapers ───────────────────────────────────────
 section "Collecting Wallpapers"

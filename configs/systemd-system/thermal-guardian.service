@@ -1,0 +1,12 @@
+[Unit]
+Description=Thermal Guardian — AMD CPU throttle watchdog
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/thermal-guardian.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

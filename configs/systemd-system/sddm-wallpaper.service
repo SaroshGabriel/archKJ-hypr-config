@@ -1,0 +1,12 @@
+[Unit]
+Description=Set random wallpaper for SDDM login screen
+Before=sddm.service
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/sddm-random-wallpaper.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
