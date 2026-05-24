@@ -1,5 +1,5 @@
 #
-# ~/.bashrc — archKJ
+# ~/.bashrc — archmac
 #
 
 [[ $- != *i* ]] && return
@@ -8,8 +8,19 @@
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 PS1='\[\e[1;35m\][\u@\h \W]\$ \[\e[0m\] '
-export PATH="$PATH:/home/KJ/.local/bin"
-export PATH=~/.npm-global/bin:$PATH
+export PATH="${PATH}:${HOME}/.local/bin"
+export PATH="${HOME}/.npm-global/bin:${PATH}"
+
+# ── GPG / PASS ───────────────────────────────────────────────
+export GPG_TTY="${TTY:-$(tty 2>/dev/null)}"
+export PASSWORD_STORE_DIR="${XDG_DATA_HOME:-${HOME}/.local/share}/pass"
+gpg-connect-agent updatestartuptty /bye &>/dev/null
+
+# Load a pass secret into an env var — usage: passenv VARNAME pass/path
+passenv() {
+    local var="${1}" path="${2}"
+    export "${var}"="$(pass show "${path}" 2>/dev/null)" || echo "WARN: pass show ${path} failed" >&2
+}
 
 # ── SYSTEM ──────────────────────────────────────────────────
 alias c='clear'
@@ -17,13 +28,13 @@ alias bye='systemctl poweroff'
 alias restart='systemctl reboot'
 alias ll='ls -la --color=auto'
 alias la='ls -A --color=auto'
-alias lss='ls -lSh --color=auto'         # sort by size
-alias lst='ls -lt --color=auto'          # sort by time
+alias lss='ls -lSh --color=auto'
+alias lst='ls -lt --color=auto'
 alias mkdir='mkdir -p'
 alias df='df -h'
 alias du='du -sh'
 alias free='free -h'
-alias top='htop 2>/dev/null || top'
+alias top='btop 2>/dev/null || htop 2>/dev/null || top'
 alias myip='hostname -I'
 
 # ── PACMAN ──────────────────────────────────────────────────
@@ -45,19 +56,19 @@ alias venv='source .venv/bin/activate'
 alias venv-new='python3 -m venv .venv && source .venv/bin/activate'
 alias pyreq='pip freeze > requirements.txt && echo "requirements.txt updated"'
 alias pyinstall='pip install -r requirements.txt'
-alias nifty='cd ~/LinuxScripts/niftyMonitor && source .venv/bin/activate && python stock_monitor.py'
+alias nifty='cd "${HOME}/LinuxScripts/niftyMonitor" && source .venv/bin/activate && python stock_monitor.py'
 
 # ── NETWORK ─────────────────────────────────────────────────
-alias ports='ls /dev/tty{USB,ACM}* 2>/dev/null || echo "No serial devices"'  # USB/serial
-alias netports='ss -tlnp'                # listening TCP ports
+alias ports='ls /dev/tty{USB,ACM}* 2>/dev/null || echo "No serial devices"'
+alias netports='ss -tlnp'
 alias myips='hostname -I'
 
 # ── HYPRLAND ────────────────────────────────────────────────
-alias snap='hyprshot -m output -o ~/Pictures/ -s'
-alias snapr='hyprshot -m region -o ~/Pictures/ -s'
+alias snap='hyprshot -m output -o "${HOME}/Pictures/" -s'
+alias snapr='hyprshot -m region -o "${HOME}/Pictures/" -s'
 alias wb='killall waybar; waybar & disown'
 alias reloadhypr='hyprctl reload'
-alias shortcuts='grep "^bind" ~/.config/hypr/hyprland.conf'
+alias shortcuts='grep "^bind" "${HOME}/.config/hypr/hyprland.conf"'
 alias logind-reload='sudo systemctl kill -s HUP systemd-logind'
 
 # ── SYSTEM LOGS ─────────────────────────────────────────────
@@ -66,7 +77,7 @@ alias jctl='sudo journalctl -xe'
 
 # ── SNAPSHOT / BACKUP ───────────────────────────────────────
 alias ts='smart-timeshift'
-alias tsc='ts "archkj snapshot $(date +%Y-%m-%d)"'
+alias tsc='ts "archmac snapshot $(date +%Y-%m-%d)"'
 
 # ── REMOTE ──────────────────────────────────────────────────
 alias ratpi='ssh REDACTED'
