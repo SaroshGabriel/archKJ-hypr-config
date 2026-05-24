@@ -65,7 +65,7 @@ _on_disconnect() {
 }
 
 # Listen to Hyprland socket2 events
-SOCKET="/tmp/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
+SOCKET="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
 
 socat -U - "UNIX-CONNECT:${SOCKET}" | while IFS= read -r event; do
     case "${event}" in

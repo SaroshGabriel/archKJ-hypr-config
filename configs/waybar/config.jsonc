@@ -4,7 +4,7 @@
     "output": "HDMI-A-1",
     "layer": "top",
     "position": "top",
-    "height": 40,
+    "height": 46,
     "spacing": 5,
 
     "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/brave", "custom/firefox", "custom/telegram", "custom/deluge", "mpris"],
@@ -15,12 +15,10 @@
         "format": "{icon}",
         "on-click": "activate",
         "persistent-workspaces": {
-            "HDMI-A-1": [11, 12, 13, 14],
-            "eDP-1": [1, 2, 3, 4]
+            "HDMI-A-1": [11, 12, 13, 14]
         },
         "format-icons": {
-            "1": "፩", "2": "፪", "3": "፫", "4": "፬",
-            "11": "♔", "12": "♕", "13": "♖", "14": "♗",
+            "11": "፩", "12": "፪", "13": "፫", "14": "፬",
             "urgent": "",
             "default": ""
         }
@@ -152,7 +150,7 @@
     "output": "eDP-1",
     "layer": "top",
     "position": "top",
-    "height": 48,
+    "height": 54,
     "spacing": 6,
 
     "modules-left": ["hyprland/workspaces", "hyprland/submap", "custom/terminal", "custom/brave", "custom/firefox", "custom/telegram", "custom/deluge", "mpris"],
@@ -163,12 +161,10 @@
         "format": "{icon}",
         "on-click": "activate",
         "persistent-workspaces": {
-            "HDMI-A-1": [11, 12, 13, 14],
             "eDP-1": [1, 2, 3, 4]
         },
         "format-icons": {
-            "1": "፩", "2": "፪", "3": "፫", "4": "፬",
-            "11": "♔", "12": "♕", "13": "♖", "14": "♗",
+            "1": "♔", "2": "♕", "3": "♖", "4": "♗",
             "urgent": "",
             "default": ""
         }
