@@ -78,6 +78,8 @@ mkdir -p "$DOTFILES_DIR/configs/networkmanager-dmenu"
 mkdir -p "$DOTFILES_DIR/wallpapers"
 mkdir -p "$DOTFILES_DIR/docs"
 mkdir -p "$DOTFILES_DIR/scripts"
+mkdir -p "$DOTFILES_DIR/configs/systemd-user"
+mkdir -p "$DOTFILES_DIR/configs/environment.d"
 ok "Folder structure ready"
 
 # ── Collect Configs ──────────────────────────────────────────
@@ -137,6 +139,30 @@ if [ -f "$HOME_DIR/.bashrc" ]; then
     ok ".bashrc collected"
 else
     warn "~/.bashrc not found, skipping"
+fi
+
+# Scripts (archmac + ratpi deployment scripts)
+if [ -d "$HOME_DIR/scripts" ]; then
+    cp -r "$HOME_DIR/scripts/"* "$DOTFILES_DIR/scripts/"
+    ok "~/scripts collected"
+else
+    warn "~/scripts not found, skipping"
+fi
+
+# Systemd user units
+if [ -d "$HOME_DIR/.config/systemd/user" ]; then
+    cp -r "$HOME_DIR/.config/systemd/user/"* "$DOTFILES_DIR/configs/systemd-user/"
+    ok "systemd user units collected"
+else
+    warn "~/.config/systemd/user not found, skipping"
+fi
+
+# Environment.d (persistent user env vars for systemd)
+if [ -d "$HOME_DIR/.config/environment.d" ]; then
+    cp -r "$HOME_DIR/.config/environment.d/"* "$DOTFILES_DIR/configs/environment.d/"
+    ok "environment.d collected"
+else
+    warn "~/.config/environment.d not found, skipping"
 fi
 
 # ── Collect Wallpapers ───────────────────────────────────────

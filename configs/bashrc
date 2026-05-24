@@ -141,3 +141,11 @@ labmap() {
   echo -e "$LINE"
   echo -e "  ${D}user: ${W}REDACTED${D}   ·   ssh: ${W}ratpi${D} / ${W}ratpits${D}   ·   pass: vault${N}\n"
 }
+
+# ── FZF ─────────────────────────────────────────────────────
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --preview "bat --color=always --line-range :50 {} 2>/dev/null || ls -la {}"'
+source /usr/share/fzf/key-bindings.bash 2>/dev/null
+source /usr/share/fzf/completion.bash 2>/dev/null

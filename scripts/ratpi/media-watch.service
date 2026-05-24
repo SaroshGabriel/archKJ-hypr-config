@@ -1,0 +1,14 @@
+[Unit]
+Description=Media watcher — trigger Jellyfin scan on new sorted media
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/REDACTED/scripts/watch-media.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

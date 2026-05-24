@@ -1,0 +1,9 @@
+[Unit]
+Description=Disk usage alert — archmac
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/scripts/disk-alert.sh
+StandardOutput=journal
+StandardError=journal
