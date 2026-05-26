@@ -5,6 +5,7 @@
 # ============================================================
 import subprocess
 import os
+import socket
 import datetime
 from pathlib import Path
 
@@ -17,10 +18,22 @@ REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
 def run(cmd):
     try:
-        r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=10)
+        env = os.environ.copy()
+        env["PATH"] = "/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/bin"
+        r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=10, env=env)
         return r.stdout.strip() or r.stderr.strip() or "OK"
     except Exception:
         return "TIMEOUT/ERROR"
+
+
+def read_k10temp():
+    for hwmon in sorted(Path("/sys/class/hwmon").iterdir()):
+        name_f = hwmon / "name"
+        if name_f.exists() and name_f.read_text().strip() == "k10temp":
+            temp_f = hwmon / "temp1_input"
+            if temp_f.exists():
+                return str(round(int(temp_f.read_text().strip()) / 1000, 1))
+    return "N/A"
 
 
 def check_file(path): return "✅ EXISTS" if Path(path).exists() else "❌ MISSING"
@@ -33,16 +46,14 @@ r = []
 r.append("=" * 60)
 r.append("PRE-TIMESHIFT VERIFICATION REPORT")
 r.append(f"Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-r.append(f"Host:       {run('hostname')}")
+r.append(f"Host:       {socket.gethostname()}")
 r.append("=" * 60)
 
 # ── System ───────────────────────────────────────────────────
 r.append("\n[ SYSTEM ]")
 r.append(f"Kernel:             {run('uname -r')}")
 r.append(f"Uptime:             {run('uptime -p')}")
-temp_raw = run("cat /sys/class/thermal/thermal_zone0/temp")
-temp_c = str(round(int(temp_raw) / 1000, 1)) if temp_raw.isdigit() else "N/A"
-r.append(f"CPU Temp:           {temp_c}°C")
+r.append(f"CPU Temp:           {read_k10temp()}°C")
 r.append(f"Disk / (root):      {run('df -h / | tail -1')}")
 r.append(f"Disk /mnt/Data:     {run('df -h /mnt/Data | tail -1')}")
 r.append(f"Disk /mnt/Movies:   {run('df -h /mnt/Movies | tail -1')}")
