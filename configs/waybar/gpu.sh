@@ -11,18 +11,32 @@ import time
 from pathlib import Path
 
 INTERVAL = 2.0
-IGPU_PCI_SLOT = "0000:04:00.0"
+
+
+def find_edp_pci_slot():
+    """Return PCI slot of whichever card drives the built-in eDP display."""
+    for entry in sorted(Path("/sys/class/drm").iterdir()):
+        if "-eDP" not in entry.name:
+            continue
+        card = entry.name.split("-")[0]
+        uevent = Path(f"/sys/class/drm/{card}/device/uevent")
+        if uevent.exists():
+            for line in uevent.read_text().splitlines():
+                if line.startswith("PCI_SLOT_NAME="):
+                    return line.split("=", 1)[1]
+    return None
 
 
 def find_igpu_hwmon():
+    pci_slot = find_edp_pci_slot()
+    if not pci_slot:
+        return None
     for hwmon in sorted(Path("/sys/class/hwmon").iterdir()):
         name_f = hwmon / "name"
         uevent_f = hwmon / "device" / "uevent"
-        if not name_f.exists():
+        if not name_f.exists() or name_f.read_text().strip() != "amdgpu":
             continue
-        if name_f.read_text().strip() != "amdgpu":
-            continue
-        if uevent_f.exists() and IGPU_PCI_SLOT in uevent_f.read_text():
+        if uevent_f.exists() and pci_slot in uevent_f.read_text():
             return hwmon
     return None
 
@@ -59,7 +73,16 @@ def read_pstate(card_path):
 
 def main():
     hwmon = find_igpu_hwmon()
-    card_dev = Path("/sys/class/drm/card2/device")
+    pci_slot = find_edp_pci_slot()
+    card_dev = None
+    if pci_slot:
+        for entry in sorted(Path("/sys/class/drm").iterdir()):
+            if "-" in entry.name:
+                continue
+            uevent = entry / "device" / "uevent"
+            if uevent.exists() and pci_slot in uevent.read_text():
+                card_dev = entry / "device"
+                break
 
     while True:
         temp = 0
