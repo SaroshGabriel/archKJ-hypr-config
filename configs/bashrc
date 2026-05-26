@@ -34,8 +34,8 @@ alias mkdir='mkdir -p'
 alias df='df -h'
 alias du='du -sh'
 alias free='free -h'
-alias top='btop 2>/dev/null || htop 2>/dev/null || top'
-alias myip='hostname -I'
+alias top='btop 2>/dev/null || htop 2>/dev/null || /usr/bin/top'
+alias myip='ip addr show scope global | grep inet | awk "{print \$2}" | cut -d/ -f1'
 
 # ── PACMAN ──────────────────────────────────────────────────
 alias pacman='sudo pacman --noconfirm'
@@ -56,17 +56,16 @@ alias venv='source .venv/bin/activate'
 alias venv-new='python3 -m venv .venv && source .venv/bin/activate'
 alias pyreq='pip freeze > requirements.txt && echo "requirements.txt updated"'
 alias pyinstall='pip install -r requirements.txt'
-alias nifty='cd "${HOME}/LinuxScripts/niftyMonitor" && source .venv/bin/activate && python stock_monitor.py'
+alias nifty='cd "${HOME}/LinuxScripts/niftyMonitor" && source .venv/bin/activate && python3 stock_monitor.py'
 
 # ── NETWORK ─────────────────────────────────────────────────
 alias ports='ls /dev/tty{USB,ACM}* 2>/dev/null || echo "No serial devices"'
 alias netports='ss -tlnp'
-alias myips='hostname -I'
 
 # ── HYPRLAND ────────────────────────────────────────────────
 alias snap='hyprshot -m output -o "${HOME}/Pictures/" -s'
 alias snapr='hyprshot -m region -o "${HOME}/Pictures/" -s'
-alias wb='killall waybar; waybar & disown'
+alias wb='killall waybar; sleep 2 && systemd-cat -t waybar waybar & disown'
 alias reloadhypr='hyprctl reload'
 alias shortcuts='grep "^bind" "${HOME}/.config/hypr/hyprland.conf"'
 alias logind-reload='sudo systemctl kill -s HUP systemd-logind'
@@ -77,7 +76,7 @@ alias jctl='sudo journalctl -xe'
 
 # ── SNAPSHOT / BACKUP ───────────────────────────────────────
 alias ts='smart-timeshift'
-alias tsc='ts "archmac snapshot $(date +%Y-%m-%d)"'
+tsc() { smart-timeshift "archmac snapshot $(date +%Y-%m-%d)"; }
 
 # ── REMOTE ──────────────────────────────────────────────────
 alias ratpi='ssh REDACTED'
