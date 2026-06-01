@@ -119,7 +119,7 @@ section "Backing Up Existing Configs"
 
 BACKUP_DIR="$HOME_DIR/.config-backup-$(date +%Y%m%d%H%M%S)"
 mkdir -p "$BACKUP_DIR"
-for dir in hypr waybar rofi kitty hyprlock networkmanager-dmenu; do
+for dir in hypr waybar rofi kitty hyprlock networkmanager-dmenu fastfetch; do
     if [ -d "$HOME_DIR/.config/$dir" ]; then
         cp -r "$HOME_DIR/.config/$dir" "$BACKUP_DIR/"
         log "Backed up ~/.config/$dir"
@@ -131,7 +131,7 @@ ok "Backup saved → $BACKUP_DIR"
 # ── Copy Dotfiles ─────────────────────────────────────────────
 section "Installing Dotfiles"
 
-for dir in hypr waybar rofi kitty; do
+for dir in hypr waybar rofi kitty fastfetch; do
     cp -r "$DOTFILES_DIR/configs/$dir" "$HOME_DIR/.config/"
     ok "~/.config/$dir installed"
 done
@@ -162,6 +162,7 @@ chmod +x "$HOME_DIR/.config/hypr/fix-brave.sh"
 chmod +x "$HOME_DIR/.config/rofi/"*.sh
 chmod +x "$HOME_DIR/.config/waybar/"*.sh
 [ -d "$HOME_DIR/.config/hypr/scripts" ] && chmod +x "$HOME_DIR/.config/hypr/scripts/"*
+[ -f "$HOME_DIR/.config/fastfetch/launch.sh" ] && chmod +x "$HOME_DIR/.config/fastfetch/launch.sh"
 ok "Permissions set"
 
 # ── Enable Services ───────────────────────────────────────────

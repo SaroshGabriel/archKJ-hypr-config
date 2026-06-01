@@ -1,29 +1,56 @@
 # archkj-dotfiles
 
-> Arch Linux + **Hyprland** system — clone and replicate in one script.
+> A cyberpunk **Hyprland** rice for Arch Linux — clone, run one script, reboot into it.
 
-![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=flat&logo=arch-linux&logoColor=white)
-![Hyprland](https://img.shields.io/badge/Hyprland-58E1FF?style=flat)
-![Waybar](https://img.shields.io/badge/Waybar-EF3946?style=flat)
+![Distro](https://img.shields.io/badge/distro-Arch%20Linux-1793d1?logo=archlinux&logoColor=white)
+![WM](https://img.shields.io/badge/WM-Hyprland-58e1ff)
+![Bar](https://img.shields.io/badge/bar-Waybar-ef3946)
+![Shell](https://img.shields.io/badge/shell-bash-4eaa25?logo=gnubash&logoColor=white)
+![Theme](https://img.shields.io/badge/theme-cyberpunk%20red%2Fpink-ff2d6f)
+![Status](https://img.shields.io/badge/status-daily%20driver-2ea043)
 
-A cyberpunk red/pink rice: full Wayland desktop config plus the helper scripts
-and systemd units that drive it. Multi-host aware — the same configs run on the
-archKJ workstation and the archmac laptop.
+Full Wayland desktop config plus the scripts and systemd units that drive it.
+Multi-host aware — the same configs run on my Acer Nitro laptop (`archmac`) and
+the older `archKJ` workstation. *Speak friend and enter: `bash install.sh`.*
 
 ---
 
-## What's included
+## Screenshots
 
-| Category | Details |
+**Desktop** — Hyprland + Waybar, cyberpunk red/pink over an anime wallpaper.
+
+![Desktop](docs/screenshots/desktop.png)
+
+| Rofi launcher | Terminal — Kitty + fastfetch banner |
+|---------------|-------------------------------------|
+| ![Rofi](docs/screenshots/rofi.png) | ![Terminal](docs/screenshots/terminal.png) |
+
+> _More coming: Waybar close-up, Hyprlock, and the SDDM login screen._
+
+---
+
+## Why I Built This
+
+I wanted a desktop that was entirely mine — every keybind, color, and module
+deliberate, and reproducible on a fresh install in minutes. Daily-driving it
+forces it to stay practical, not just pretty.
+
+---
+
+## System
+
+| | |
 |---|---|
-| **WM** | Hyprland — dual-monitor workspaces, hypridle, hyprlock |
-| **Bar** | Waybar — per-monitor bars; cpu/gpu/battery/netspeed/clipboard modules |
-| **Launcher** | Rofi (cyberpunk theme) + wifi / bluetooth / powermenu menus |
-| **Terminal** | Kitty, JetBrainsMono Nerd Font |
-| **Shell** | Bash — aliases auto-sync to running docker services |
-| **Login** | SDDM (astronaut theme) + Sekiro GRUB theme |
-| **Thermals** | `thermal-guardian` service + disk-alert timer |
-| **Backups** | Timeshift snapshots + retention script |
+| **Host** | Acer Nitro AN515-42 (`archmac`) — also runs on `archKJ` |
+| **CPU / GPU** | AMD Ryzen + Radeon Vega iGPU |
+| **WM** | Hyprland (Wayland) |
+| **Bar** | Waybar (per-monitor) |
+| **Launcher** | Rofi (cyberpunk theme) |
+| **Terminal** | Kitty + JetBrainsMono Nerd Font |
+| **Banner** | fastfetch — auto-sized Arch logo + system + homelab on shell open |
+| **Lock** | Hyprlock + Hypridle |
+| **Login** | SDDM (astronaut) + Sekiro GRUB theme |
+| **Shell** | Bash |
 
 **Theme:** background `#32111C`, accent `#EF3946`.
 
@@ -34,48 +61,126 @@ archKJ workstation and the archmac laptop.
 ```bash
 git clone https://github.com/SaroshGabriel/archkj-dotfiles.git
 cd archkj-dotfiles
-bash install.sh          # installs packages, symlinks configs, enables services
+bash install.sh
 ```
 
-Package lists live in `docs/pacman-packages.txt` and `docs/aur-packages.txt`.
-After install: reboot, pick **Hyprland** at SDDM. NTFS drives → `docs/HDD_MOUNT.md`.
+Installs packages, symlinks configs, enables services, backs up anything it
+would overwrite. Package lists: `docs/pacman-packages.txt`, `docs/aur-packages.txt`.
+After install, reboot and pick **Hyprland** at SDDM. NTFS drives: see
+`docs/HDD_MOUNT.md`.
+
+---
+
+## Keybindings
+
+`SUPER` is the mod key.
+
+### Applications
+| Key | Action |
+|-----|--------|
+| `SUPER + Return` / `SUPER + K` | Kitty terminal |
+| `SUPER + D` | Rofi app launcher |
+| `SUPER + B` / `SUPER + F` | Brave / Firefox |
+| `SUPER + T` | Thunar file manager |
+| `SUPER + C` | VS Code |
+| `SUPER + G` | Telegram |
+| `SUPER + M` | cava (floating audio visualiser) |
+| `SUPER + V` | Clipboard history (cliphist + Rofi) |
+
+### Window management
+| Key | Action |
+|-----|--------|
+| `SUPER + Q` | Close window |
+| `SUPER + Space` | Toggle floating |
+| `SUPER SHIFT + F` | Fullscreen |
+| `SUPER + ←/→/↑/↓` | Move focus |
+| `SUPER SHIFT + ←/→/↑/↓` | Move window |
+| `SUPER CTRL + ←/→/↑/↓` | Resize window |
+| `ALT + Tab` | Cycle windows |
+| `SUPER + 1–9` | Switch workspace |
+| `SUPER SHIFT + 1–9` | Send window to workspace |
+| `SUPER + P` | Focus next monitor |
+
+### System
+| Key | Action |
+|-----|--------|
+| `SUPER + W` | Restart Waybar |
+| `Print` | Screenshot region → clipboard |
+| `SHIFT + Print` | Screenshot full output |
+| `CTRL + Print` | Screenshot active window |
+| `XF86Audio*` | Volume / mute / play-pause (wpctl + playerctl) |
+| `XF86MonBrightness*` | Brightness (brightnessctl) |
 
 ---
 
 ## Layout
 
 ```
-install.sh                 Bootstrap: packages + symlinks + services
-collect.sh                 Pull live configs back into the repo
-setup-github.sh            Git/SSH setup helper
+install.sh             Bootstrap: packages + symlinks + services
+collect.sh             Pull live configs back into the repo
+setup-github.sh        Git/SSH setup helper
 configs/
-  bashrc                   Shell config (labmap auto-syncs to docker services)
-  hypr/                    hyprland.conf, hypridle, scripts (wallpaper, lid,
-                           monitor-hotplug, pre-timeshift-verify, fix-brave)
-  hyprlock/  kitty/  rofi/ Lock screen, terminal, launcher (+ wifi/bt/power menus)
-  waybar/                  config.jsonc, style.css, module scripts
-  sddm/  grub/             Login + boot themes
-  systemd-system/          thermal-guardian, sddm-wallpaper units
-  systemd-user/            disk-alert timer/service
-  environment.d/  networkmanager-dmenu/
-scripts/
-  thermal-guardian.sh  disk-alert.sh  backup-retention.sh
-  system/sddm-random-wallpaper.sh
-  ratpi/                   Helpers that target the Pi (media sort/scan/watch)
-docs/                      HDD_MOUNT.md, pacman/aur package lists
-wallpapers/                124 wallpapers
+  bashrc               Shell config (aliases auto-sync to running services)
+  hypr/                hyprland.conf, hypridle, hyprland-portals
+    scripts/           wallpaper, lid, monitor-hotplug, pre-timeshift-verify, fix-brave
+  hyprlock/            Lock screen
+  fastfetch/           Startup banner (config.jsonc + launch.sh, window-aware logo)
+  kitty/  rofi/        Terminal + launcher (wifi / bluetooth / power menus)
+  waybar/              config.jsonc, style.css, module scripts (cpu/gpu/battery/netspeed/...)
+  sddm/  grub/         Login + boot themes
+  systemd-system/      thermal-guardian, sddm-wallpaper units
+  systemd-user/        disk-alert timer/service
+docs/                  HDD_MOUNT.md, pacman/aur package lists
+wallpapers/            124 wallpapers
 ```
+
+---
+
+## Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `configs/waybar/gpu.sh` | iGPU usage — auto-detects via active eDP output, no hard-coded PCI slot |
+| `configs/waybar/netspeed.sh` | Live up/down network speed |
+| `configs/hypr/scripts/monitor-hotplug.sh` | React to monitors being plugged/unplugged |
+| `configs/hypr/scripts/lid.sh` | Laptop lid open/close handling |
+| `configs/hypr/scripts/pre-timeshift-verify.py` | Sanity checks before a Timeshift snapshot |
+| `scripts/thermal-guardian.sh` | Thermal watchdog (systemd service) |
+| `scripts/disk-alert.sh` | Disk-usage threshold alerts (systemd timer) |
+| `scripts/system/sddm-random-wallpaper.sh` | Randomise the SDDM login wallpaper |
+| `configs/fastfetch/launch.sh` | Sizes the fastfetch Arch logo to the current terminal window |
 
 ---
 
 ## Notes
 
-- **Hardware auto-detect:** `gpu.sh` finds the iGPU via the active eDP output
-  (no hard-coded PCI slot), so the same config works on both machines.
-- `hypridle` staggers lock/DPMS and suspends at 30 min.
+- **Hardware auto-detect:** `gpu.sh` finds the iGPU via the active eDP output, so
+  the same config works across machines without editing PCI slots.
+- **Hypridle** staggers lock/DPMS and suspends at 30 min.
 - ProtonVPN / credentials are **not** stored in this repo.
-- **Large repo (~1 GB) — it's the wallpapers.** Configs-only checkout:
+- **~1 GB repo — it's the wallpapers.** Configs-only checkout:
   ```bash
   git clone --filter=blob:none --sparse https://github.com/SaroshGabriel/archkj-dotfiles.git
   cd archkj-dotfiles && git sparse-checkout set configs scripts docs
   ```
+
+---
+
+## Branches
+
+- **`main`** — primary, machine-agnostic configs.
+- **`archmac`** — Acer Nitro laptop tweaks (per-monitor bars, brightness module, slim autostart).
+
+---
+
+## Roadmap
+
+- [ ] Add screenshots
+- [ ] Move wallpapers out of git (LFS or separate release) to shrink clones
+- [ ] One-shot dotfiles bootstrap on a truly fresh install, start to finish
+
+---
+
+## Author
+
+**Sarosh (KJ)** · [github.com/SaroshGabriel](https://github.com/SaroshGabriel) · saroshjibreel@gmail.com
