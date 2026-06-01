@@ -9,7 +9,12 @@ import os
 import datetime
 
 # ── Config ───────────────────────────────────────────────────
-HOME = "/home/KJ"
+# Machine-agnostic: HOME is detected, not hardcoded. Extra data disks to check
+# come from EXTRA_DISKS (colon-separated mountpoints) so this works on any host:
+#   EXTRA_DISKS=/mnt/HDD1:/mnt/HDD2     (archKJ)
+#   EXTRA_DISKS=/mnt/Data:/mnt/Movies   (archmac)
+HOME = os.path.expanduser("~")
+EXTRA_DISKS = [d for d in os.environ.get("EXTRA_DISKS", "").split(":") if d]
 REPORT_DIR = f"{HOME}/Logs/preTimeshift"
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 report_path = f"{REPORT_DIR}/preTimeshiftReport_{timestamp}.log"
@@ -56,9 +61,9 @@ temp_raw = run("cat /sys/class/thermal/thermal_zone0/temp")
 temp_c = str(round(int(temp_raw) / 1000, 1)) if temp_raw.isdigit() else "N/A"
 r.append(f"CPU Temp:           {temp_c}°C")
 r.append(f"CPU Governor:       {run('cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor')}")
-r.append(f"Disk / (SSD):       {run('df -h / | tail -1')}")
-r.append(f"Disk HDD1:          {run('df -h /mnt/HDD1 | tail -1')}")
-r.append(f"Disk HDD2:          {run('df -h /mnt/HDD2 | tail -1')}")
+r.append(f"Disk / (root):      {run('df -h / | tail -1')}")
+for _d in EXTRA_DISKS:
+    r.append(f"Disk {_d}:".ljust(20) + f"{run(f'df -h {_d} | tail -1')}")
 r.append(f"RAM:                {run('free -h | grep Mem')}")
 r.append(f"Failed Services:    {run('systemctl --failed --no-legend | wc -l')} failed")
 r.append(f"Orphan packages:    {run('pacman -Qdt 2>/dev/null | wc -l')} orphans")
@@ -82,7 +87,7 @@ r.append(f"wallpaper.sh:       {check_file(f'{HOME}/.config/hypr/wallpaper.sh')}
 r.append(f"fix-brave.sh:       {check_file(f'{HOME}/.config/hypr/fix-brave.sh')}")
 r.append(f"launch-nifty.sh:    {check_file(f'{HOME}/.config/hypr/scripts/launch-nifty.sh')}")
 r.append(f"pre-timeshift.py:   {check_file(f'{HOME}/.config/hypr/scripts/pre-timeshift-verify.py')}")
-r.append(f"WLR_DRM_DEVICES:    {run('grep WLR_DRM_DEVICES /home/KJ/.config/hypr/hyprland.conf')}")
+r.append(f"WLR_DRM_DEVICES:    {run(f'grep WLR_DRM_DEVICES {HOME}/.config/hypr/hyprland.conf')}")
 r.append(f"Monitors:           {run('hyprctl monitors | grep Monitor')}")
 r.append(f"awww-daemon:        {'✅ YES' if run('pgrep awww-daemon') else '❌ NOT RUNNING'}")
 
@@ -98,15 +103,15 @@ r.append(f"Waybar running:     {'✅ YES' if run('pgrep waybar') else '❌ NOT R
 # ── Kitty ────────────────────────────────────────────────────
 r.append("\n[ KITTY ]")
 r.append(f"kitty.conf:         {check_file(f'{HOME}/.config/kitty/kitty.conf')}")
-r.append(f"cursor_blink:       {run('grep cursor_blink_interval /home/KJ/.config/kitty/kitty.conf')}")
-r.append(f"repaint_delay:      {run('grep repaint_delay /home/KJ/.config/kitty/kitty.conf')}")
+r.append(f"cursor_blink:       {run(f'grep cursor_blink_interval {HOME}/.config/kitty/kitty.conf')}")
+r.append(f"repaint_delay:      {run(f'grep repaint_delay {HOME}/.config/kitty/kitty.conf')}")
 
 # ── Rofi ─────────────────────────────────────────────────────
 r.append("\n[ ROFI ]")
 r.append(f"config.rasi:        {check_file(f'{HOME}/.config/rofi/config.rasi')}")
 r.append(f"cyberpunk.rasi:     {check_file(f'{HOME}/.config/rofi/cyberpunk.rasi')}")
 r.append(f"powermenu.sh:       {check_file(f'{HOME}/.config/rofi/powermenu.sh')}")
-r.append(f"Modes:              {run('grep modes /home/KJ/.config/rofi/config.rasi')}")
+r.append(f"Modes:              {run(f'grep modes {HOME}/.config/rofi/config.rasi')}")
 
 # ── Dunst ────────────────────────────────────────────────────
 r.append("\n[ DUNST ]")
@@ -120,7 +125,7 @@ r.append(f"portal config:      {check_file(f'{HOME}/.config/xdg-desktop-portal/h
 # ── Brave ────────────────────────────────────────────────────
 r.append("\n[ BRAVE ]")
 r.append(f"brave-flags.conf:   {check_file(f'{HOME}/.config/brave-flags.conf')}")
-r.append(f"HW accel disabled:  {run('grep disable-gpu /home/KJ/.config/brave-flags.conf | head -1')}")
+r.append(f"HW accel disabled:  {run(f'grep disable-gpu {HOME}/.config/brave-flags.conf | head -1')}")
 
 # ── SDDM ─────────────────────────────────────────────────────
 r.append("\n[ SDDM ]")
@@ -142,10 +147,10 @@ r.append(f"Timeshift cron:     {run('sudo crontab -l 2>/dev/null | grep timeshif
 r.append("\n[ STORAGE ]")
 r.append(f"SSD (sda):          {run('lsblk /dev/sda -o NAME,SIZE,MOUNTPOINT | grep -v loop')}")
 r.append(f"HDD (sdb):          {run('lsblk /dev/sdb -o NAME,SIZE,MOUNTPOINT | grep -v loop')}")
-r.append(f"HDD1 mounted:       {'✅ YES' if run('mountpoint -q /mnt/HDD1 && echo yes') == 'yes' else '❌ NOT MOUNTED'}")
-r.append(f"HDD2 mounted:       {'✅ YES' if run('mountpoint -q /mnt/HDD2 && echo yes') == 'yes' else '❌ NOT MOUNTED'}")
+for _d in EXTRA_DISKS:
+    _ok = run(f'mountpoint -q {_d} && echo yes') == 'yes'
+    r.append(f"{_d} mounted:".ljust(20) + ('✅ YES' if _ok else '❌ NOT MOUNTED'))
 r.append(f"Torrents dir:       {check_dir(f'{HOME}/Downloads/Torrents')}")
-r.append(f"HDD2 Torrents:      {check_dir('/mnt/HDD2/Torrents')}")
 
 # ── DFT Setup ────────────────────────────────────────────────
 r.append("\n[ DFT SETUP ]")
@@ -195,13 +200,13 @@ for app in apps:
 
 # ── Wallpapers ───────────────────────────────────────────────
 r.append("\n[ WALLPAPERS ]")
-r.append(f"Total wallpapers:   {run('find /home/KJ/Pictures/Wallpapers -type f 2>/dev/null | wc -l')}")
+r.append(f"Total wallpapers:   {run(f'find {HOME}/Pictures/Wallpapers -type f 2>/dev/null | wc -l')}")
 r.append(f"awww-daemon:        {'✅ RUNNING' if run('pgrep awww-daemon') else '❌ NOT RUNNING'}")
 
 # ── Logs ─────────────────────────────────────────────────────
 r.append("\n[ LOGS ]")
-r.append(f"preTimeshift logs:  {run('ls /home/KJ/Logs/preTimeshift/ | wc -l')} files")
-r.append(f"nifty CSV files:    {run('ls /home/KJ/Data/niftyMonitor/*.csv 2>/dev/null | wc -l')} files")
+r.append(f"preTimeshift logs:  {run(f'ls {HOME}/Logs/preTimeshift/ | wc -l')} files")
+r.append(f"nifty CSV files:    {run(f'ls {HOME}/Data/niftyMonitor/*.csv 2>/dev/null | wc -l')} files")
 
 r.append("\n" + "=" * 60)
 r.append("END OF REPORT")

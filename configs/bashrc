@@ -4,6 +4,10 @@
 
 [[ $- != *i* ]] && return
 
+# ── HOMELAB ENV (single source of truth) ─────────────────────
+# Copy configs/homelab.env.example to ~/.config/homelab.env and fill in.
+[ -f "$HOME/.config/homelab.env" ] && source "$HOME/.config/homelab.env"
+
 # ── DEFAULTS ────────────────────────────────────────────────
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
@@ -80,8 +84,8 @@ tsc() { smart-timeshift "archmac snapshot $(date +%Y-%m-%d)"; }
 
 # ── REMOTE ──────────────────────────────────────────────────
 # SSH host aliases resolve from your private ~/.ssh/config (not tracked here).
-alias homelab='ssh homelab'        # LAN host alias
-alias homelab-ts='ssh homelab-ts'  # Tailscale host alias
+alias homelab='ssh ${HOMELAB_SSH_LAN:-homelab}'        # LAN host alias (from ~/.config/homelab.env)
+alias homelab-ts='ssh ${HOMELAB_SSH_TS:-homelab-ts}'   # Tailscale host alias
 
 # ── ALIASES ─────────────────────────────────────────────────
 aliases() {
