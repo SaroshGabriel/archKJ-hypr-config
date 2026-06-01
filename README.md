@@ -1,4 +1,4 @@
-# archkj-dotfiles
+# archKJ-hypr-config
 
 > A cyberpunk **Hyprland** rice for Arch Linux — clone, run one script, reboot into it.
 
@@ -59,8 +59,8 @@ forces it to stay practical, not just pretty.
 ## Install
 
 ```bash
-git clone https://github.com/SaroshGabriel/archkj-dotfiles.git
-cd archkj-dotfiles
+git clone https://github.com/SaroshGabriel/archKJ-hypr-config.git
+cd archKJ-hypr-config
 bash install.sh
 ```
 
@@ -160,8 +160,8 @@ wallpapers/            124 wallpapers
 - ProtonVPN / credentials are **not** stored in this repo.
 - **~1 GB repo — it's the wallpapers.** Configs-only checkout:
   ```bash
-  git clone --filter=blob:none --sparse https://github.com/SaroshGabriel/archkj-dotfiles.git
-  cd archkj-dotfiles && git sparse-checkout set configs scripts docs
+  git clone --filter=blob:none --sparse https://github.com/SaroshGabriel/archKJ-hypr-config.git
+  cd archKJ-hypr-config && git sparse-checkout set configs scripts docs
   ```
 
 ---
