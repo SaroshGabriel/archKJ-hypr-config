@@ -1,5 +1,5 @@
 #
-# ~/.bashrc — archKJ
+# ~/.bashrc — archmac
 #
 
 [[ $- != *i* ]] && return
@@ -8,8 +8,19 @@
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 PS1='\[\e[1;35m\][\u@\h \W]\$ \[\e[0m\] '
-export PATH="$PATH:/home/KJ/.local/bin"
-export PATH=~/.npm-global/bin:$PATH
+export PATH="${PATH}:${HOME}/.local/bin"
+export PATH="${HOME}/.npm-global/bin:${PATH}"
+
+# ── GPG / PASS ───────────────────────────────────────────────
+export GPG_TTY="${TTY:-$(tty 2>/dev/null)}"
+export PASSWORD_STORE_DIR="${XDG_DATA_HOME:-${HOME}/.local/share}/pass"
+gpg-connect-agent updatestartuptty /bye &>/dev/null
+
+# Load a pass secret into an env var — usage: passenv VARNAME pass/path
+passenv() {
+    local var="${1}" path="${2}"
+    export "${var}"="$(pass show "${path}" 2>/dev/null)" || echo "WARN: pass show ${path} failed" >&2
+}
 
 # ── SYSTEM ──────────────────────────────────────────────────
 alias c='clear'
@@ -17,14 +28,14 @@ alias bye='systemctl poweroff'
 alias restart='systemctl reboot'
 alias ll='ls -la --color=auto'
 alias la='ls -A --color=auto'
-alias lss='ls -lSh --color=auto'         # sort by size
-alias lst='ls -lt --color=auto'          # sort by time
+alias lss='ls -lSh --color=auto'
+alias lst='ls -lt --color=auto'
 alias mkdir='mkdir -p'
 alias df='df -h'
 alias du='du -sh'
 alias free='free -h'
-alias top='htop 2>/dev/null || top'
-alias myip='hostname -I'
+alias top='btop 2>/dev/null || htop 2>/dev/null || /usr/bin/top'
+alias myip='ip addr show scope global | grep inet | awk "{print \$2}" | cut -d/ -f1'
 
 # ── PACMAN ──────────────────────────────────────────────────
 alias pacman='sudo pacman --noconfirm'
@@ -45,19 +56,18 @@ alias venv='source .venv/bin/activate'
 alias venv-new='python3 -m venv .venv && source .venv/bin/activate'
 alias pyreq='pip freeze > requirements.txt && echo "requirements.txt updated"'
 alias pyinstall='pip install -r requirements.txt'
-alias nifty='cd ~/LinuxScripts/niftyMonitor && source .venv/bin/activate && python stock_monitor.py'
+alias nifty='cd "${HOME}/LinuxScripts/niftyMonitor" && source .venv/bin/activate && python3 stock_monitor.py'
 
 # ── NETWORK ─────────────────────────────────────────────────
-alias ports='ls /dev/tty{USB,ACM}* 2>/dev/null || echo "No serial devices"'  # USB/serial
-alias netports='ss -tlnp'                # listening TCP ports
-alias myips='hostname -I'
+alias ports='ls /dev/tty{USB,ACM}* 2>/dev/null || echo "No serial devices"'
+alias netports='ss -tlnp'
 
 # ── HYPRLAND ────────────────────────────────────────────────
-alias snap='hyprshot -m output -o ~/Pictures/ -s'
-alias snapr='hyprshot -m region -o ~/Pictures/ -s'
-alias wb='killall waybar; waybar & disown'
+alias snap='hyprshot -m output -o "${HOME}/Pictures/" -s'
+alias snapr='hyprshot -m region -o "${HOME}/Pictures/" -s'
+alias wb='killall waybar; sleep 2 && systemd-cat -t waybar waybar & disown'
 alias reloadhypr='hyprctl reload'
-alias shortcuts='grep "^bind" ~/.config/hypr/hyprland.conf'
+alias shortcuts='grep "^bind" "${HOME}/.config/hypr/hyprland.conf"'
 alias logind-reload='sudo systemctl kill -s HUP systemd-logind'
 
 # ── SYSTEM LOGS ─────────────────────────────────────────────
@@ -66,11 +76,12 @@ alias jctl='sudo journalctl -xe'
 
 # ── SNAPSHOT / BACKUP ───────────────────────────────────────
 alias ts='smart-timeshift'
-alias tsc='ts "archkj snapshot $(date +%Y-%m-%d)"'
+tsc() { smart-timeshift "archmac snapshot $(date +%Y-%m-%d)"; }
 
 # ── REMOTE ──────────────────────────────────────────────────
-alias ratpi='ssh REDACTED'
-alias ratpits='ssh REDACTED'
+# SSH host aliases resolve from your private ~/.ssh/config (not tracked here).
+alias homelab='ssh homelab'        # LAN host alias
+alias homelab-ts='ssh homelab-ts'  # Tailscale host alias
 
 # ── ALIASES ─────────────────────────────────────────────────
 aliases() {
@@ -92,41 +103,18 @@ aliases() {
   echo ''
 }
 
-# ── LAB MAP ─────────────────────────────────────────────────
-labmap() {
-  local C='\033[1;36m' Y='\033[1;33m' G='\033[0;32m' M='\033[0;35m'
-  local P='\033[38;5;213m' N='\033[0m' D='\033[0;90m' W='\033[1;37m'
-  local LINE="${D}$(printf '─%.0s' {1..88})${N}"
-  echo -e "\n${C}  homeLabKJ · REDACTED${D}   REDACTED  ·  REDACTED (ts)  ·  chargeinmotion.dev${N}"
-  echo -e "$LINE"
-  printf "${Y}  %-22s %-42s %-20s${N}\n" "SERVICE" "PUBLIC" "LOCAL PORT"
-  echo -e "$LINE"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "Pi-hole"         "REDACTED.internal/admin"   ":8088/admin"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "NPM"             "LAN only"                          ":81"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "Portainer"       "REDACTED.internal"       ":9000"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "Dockge"          "REDACTED.internal"          ":5001"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "Authelia"        "REDACTED.internal"            ":9091"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "Uptime Kuma"     "REDACTED.internal"          ":3001"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "Homepage"        "REDACTED.internal"         ":3002"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "Dozzle"          "REDACTED.internal"          ":8081"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "Glances"         "LAN only"                          ":61208"
-  printf "${C}  %-22s${N} %-42s ${D}%-20s${N}\n" "Vaultwarden"     "REDACTED.internal"           ":8092"
-  echo -e "$LINE"
-  printf "${M}  %-22s${N} %-42s ${D}%-20s${N}\n" "Jellyfin"        "REDACTED.internal"        ":8096"
-  printf "${M}  %-22s${N} %-42s ${D}%-20s${N}\n" "FreshRSS"        "REDACTED.internal"             ":8095"
-  echo -e "$LINE"
-  printf "${G}  %-22s${N} %-42s ${D}%-20s${N}\n" "IT-Tools"        "REDACTED.internal"           ":8097"
-  printf "${G}  %-22s${N} %-42s ${D}%-20s${N}\n" "Stirling-PDF"    "REDACTED.internal"             ":8201"
-  printf "${G}  %-22s${N} %-42s ${D}%-20s${N}\n" "Microbin"        "REDACTED.internal"             ":8098"
-  printf "${G}  %-22s${N} %-42s ${D}%-20s${N}\n" "PairDrop"        "REDACTED.internal"            ":8204"
-  printf "${G}  %-22s${N} %-42s ${D}%-20s${N}\n" "Changedetection" "REDACTED.internal"         ":5000"
-  printf "${G}  %-22s${N} %-42s ${D}%-20s${N}\n" "Resume Builder"  "REDACTED.internal"          ":8205"
-  echo -e "$LINE"
-  printf "${P}  %-22s${N} %-42s ${D}%-20s${N}\n" "Home Assistant"  "REDACTED.internal"              ":8123"
-  printf "${P}  %-22s${N} %-42s ${D}%-20s${N}\n" "LubeLogger"      "REDACTED.internal"            ":8203"
-  printf "${P}  %-22s${N} %-42s ${D}%-20s${N}\n" "Duplicati"       "REDACTED.internal"          ":8200"
-  printf "${P}  %-22s${N} %-42s ${D}%-20s${N}\n" "Speedtest"       "REDACTED.internal"       ":8094"
-  printf "${P}  %-22s${N} %-42s ${D}%-20s${N}\n" "Portfolio"       "chargeinmotion.dev"                 ":8090"
-  echo -e "$LINE"
-  echo -e "  ${D}user: ${W}REDACTED${D}   ·   ssh: ${W}ratpi${D} / ${W}ratpits${D}   ·   pass: vault${N}\n"
-}
+# ── FZF ─────────────────────────────────────────────────────
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --preview "bat --color=always --line-range :50 {} 2>/dev/null || ls -la {}"'
+source /usr/share/fzf/key-bindings.bash 2>/dev/null
+source /usr/share/fzf/completion.bash 2>/dev/null
+
+# ── STARTUP BANNER ───────────────────────────────────────────
+# Branded fastfetch (window-aware Arch logo + system info).
+# Interactive shells only (guarded at top of this file), once per shell.
+if command -v fastfetch >/dev/null 2>&1 && [[ -z "$FASTFETCH_SHOWN" ]]; then
+    export FASTFETCH_SHOWN=1
+    "$HOME/.config/fastfetch/launch.sh"
+fi

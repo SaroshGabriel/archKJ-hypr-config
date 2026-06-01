@@ -1,0 +1,60 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+
+  "logo": {
+    "type": "kitty",
+    "source": "/usr/share/pixmaps/archlinux-logo.png",
+    "padding": { "top": 1, "right": 4 }
+  },
+
+  "display": {
+    "separator": "  ",
+    "color": { "keys": "38;5;197", "title": "38;5;205" }
+  },
+
+  "modules": [
+    "break",
+    {
+      "type": "custom",
+      "format": "  __HEADER__",
+      "outputColor": "1;38;5;205"
+    },
+    {
+      "type": "custom",
+      "format": "  __RULE__",
+      "outputColor": "38;5;197"
+    },
+    "break",
+
+    { "type": "title", "key": "  " },
+    { "type": "os",       "key": "  OS     " },
+    { "type": "host",     "key": "  HOST   " },
+    { "type": "kernel",   "key": "  KERNEL " },
+    { "type": "uptime",   "key": "  UPTIME " },
+    { "type": "packages", "key": "  PKGS   " },
+    { "type": "shell",    "key": "  SHELL  " },
+    { "type": "wm",       "key": "  WM     " },
+    { "type": "terminal", "key": "  TERM   " },
+    "break",
+    { "type": "cpu",      "key": "  CPU    " },
+    { "type": "gpu",      "key": "  GPU    " },
+    { "type": "memory",   "key": "  RAM    " },
+    { "type": "disk",     "key": "  DISK   ", "folders": "/" },
+    "break",
+    {
+      "type": "custom",
+      "format": "  H O M E L A B",
+      "outputColor": "1;38;5;205"
+    },
+    { "type": "custom", "format": "  MESH     Tailscale  ·  homelab exit node", "outputColor": "38;5;197" },
+    { "type": "custom", "format": "  DNS      Pi-hole + Unbound (self-hosted)", "outputColor": "38;5;197" },
+    { "type": "custom", "format": "  DOMAIN   chargeinmotion.dev", "outputColor": "38;5;197" },
+    "break",
+    {
+      "type": "custom",
+      "format": "  \"I'm a charge in motion.\"",
+      "outputColor": "3;38;5;205"
+    },
+    "break"
+  ]
+}
