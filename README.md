@@ -183,10 +183,10 @@ wallpapers/            124 wallpapers
 
 ## Credits
 
-This rice began as a clone of **[HighCarlSagan](https://github.com/HighCarlSagan)**'s
-dotfiles right after my first Arch install, then grew into its own thing as I
-rebuilt and retuned it for my machines. Huge thanks to Carl for the starting
-point and the inspiration.
+This rice began as a clone of **[HighCarlSagan/m-hypr-config](https://github.com/HighCarlSagan/m-hypr-config)**
+right after my first Arch install, then grew into its own thing as I rebuilt and
+retuned it for my machines. Huge thanks to [Carl](https://github.com/HighCarlSagan)
+for the starting point and the inspiration.
 
 ---
 
