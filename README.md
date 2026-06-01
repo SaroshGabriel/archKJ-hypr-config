@@ -181,6 +181,15 @@ wallpapers/            124 wallpapers
 
 ---
 
+## Credits
+
+This rice began as a clone of **[HighCarlSagan](https://github.com/HighCarlSagan)**'s
+dotfiles right after my first Arch install, then grew into its own thing as I
+rebuilt and retuned it for my machines. Huge thanks to Carl for the starting
+point and the inspiration.
+
+---
+
 ## Author
 
 **Sarosh (KJ)** · [github.com/SaroshGabriel](https://github.com/SaroshGabriel) · saroshjibreel@gmail.com
