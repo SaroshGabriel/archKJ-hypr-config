@@ -18,3 +18,7 @@ Thumbs.db
 *.mkv
 *.mp4
 *.iso
+homelab.env
+**/homelab.env
+__pycache__/
+*.pyc
