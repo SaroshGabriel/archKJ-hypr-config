@@ -58,7 +58,7 @@ section "Git Remote Check"
 
 if ! git remote get-url origin &>/dev/null; then
     warn "No git remote set. Setting up..."
-    echo -ne "${CYAN}Enter your GitHub repo URL (e.g. https://github.com/SaroshGabriel/archkj-dotfiles.git): ${NC}"
+    echo -ne "${CYAN}Enter your GitHub repo URL (e.g. https://github.com/ChargeInMotion/archkj-dotfiles.git): ${NC}"
     read -r REMOTE_URL
     git remote add origin "$REMOTE_URL"
     ok "Remote set to $REMOTE_URL"

@@ -59,7 +59,7 @@ forces it to stay practical, not just pretty.
 ## Install
 
 ```bash
-git clone https://github.com/SaroshGabriel/archKJ-hypr-config.git
+git clone https://github.com/ChargeInMotion/archKJ-hypr-config.git
 cd archKJ-hypr-config
 bash install.sh
 ```
@@ -160,7 +160,7 @@ wallpapers/            124 wallpapers
 - ProtonVPN / credentials are **not** stored in this repo.
 - **~1 GB repo — it's the wallpapers.** Configs-only checkout:
   ```bash
-  git clone --filter=blob:none --sparse https://github.com/SaroshGabriel/archKJ-hypr-config.git
+  git clone --filter=blob:none --sparse https://github.com/ChargeInMotion/archKJ-hypr-config.git
   cd archKJ-hypr-config && git sparse-checkout set configs scripts docs
   ```
 
@@ -192,4 +192,4 @@ for the starting point and the inspiration.
 
 ## Author
 
-**Sarosh (KJ)** · [github.com/SaroshGabriel](https://github.com/SaroshGabriel) · saroshjibreel@gmail.com
+**Sarosh (KJ)** · [github.com/ChargeInMotion](https://github.com/ChargeInMotion) · sarosh@chargeinmotion.dev

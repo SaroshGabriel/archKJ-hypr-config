@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # ============================================================
 #  pre-timeshift-verify.py — archkj System Health Check
-#  Author: KJ / SaroshGabriel
+#  Author: KJ / ChargeInMotion
 #  Updated: 2026-04-18 (post full system audit)
 # ============================================================
 import subprocess
